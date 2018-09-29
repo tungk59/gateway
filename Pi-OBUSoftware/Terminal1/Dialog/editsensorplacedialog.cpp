@@ -2,16 +2,17 @@
 #include "ui_editsensorplacedialog.h"
 #include "filedata.h"
 #include "mainwindow.h"
-
+#include "readfile.h"
 EditSensorPlaceDialog::EditSensorPlaceDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::EditSensorPlaceDialog)
 {
+    readfile x;
     ui->setupUi(this);
 
     connect(ui->cbxMac, SIGNAL(currentTextChanged(QString)), this, SLOT(SetView(QString)));
 
-    FileData file(DATA_PATH);
+    FileData file(x.DATA_PATH);
     int N = file.length();
     QString line;
     QStringList lst;
@@ -30,7 +31,8 @@ EditSensorPlaceDialog::~EditSensorPlaceDialog()
 
 void EditSensorPlaceDialog::accept()
 {
-    FileData file(DATA_PATH);
+    readfile x;
+    FileData file(x.DATA_PATH);
     int mac = ui->cbxMac->currentText().toInt();
     QString line = file.searchByMac(mac);
     QStringList lst = line.split(",");
@@ -46,7 +48,8 @@ void EditSensorPlaceDialog::accept()
 
 void EditSensorPlaceDialog::SetView(QString mac)
 {
-    FileData file(DATA_PATH);
+    readfile x;
+    FileData file(x.DATA_PATH);
     QString line = file.searchByMac(mac.toInt());
     QStringList lst = line.split(",");
     ui->lineLat->setText(lst.value(1));

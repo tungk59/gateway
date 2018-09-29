@@ -3,7 +3,7 @@
 #include <QDebug>
 #include "data.h"
 #include "QDir"
-
+#include "readfile.h"
 Tranceiver::Tranceiver(QObject *parent) :
     QObject(parent)
 {
@@ -89,12 +89,13 @@ void Tranceiver::WriteTextAppend(QString FileName, QString Text)
 
 void Tranceiver::readData()
 {
+    readfile x;
     int t = port->bytesAvailable();
     if (t) {
         QString Code, Start, End, Image, my_Imgage;
         QByteArray ba = port->readAll();
         QString test(ba);
-        WriteTextAppend(LOG_FILE,test + "------------------------------------------\n");
+        WriteTextAppend(x.LOG_FILE,test + "------------------------------------------\n");
         char* tmp = ba.data();
         char line[1024];
         QString Line;
@@ -107,7 +108,7 @@ void Tranceiver::readData()
                 if(j > 1){
                     emit receivedData(Line);
                 }
-                WriteTextAppend(LOG_FILE, Line + "***************************************\n");
+                WriteTextAppend(x.LOG_FILE, Line + "***************************************\n");
                 //qDebug()<< "Line:  "<< Line;
                 Code = Line.mid(0,3);
                 switch(CheckCode(Code)){
@@ -122,10 +123,10 @@ void Tranceiver::readData()
                             QDate date;
                             QString d = date.currentDate().toString("yyyy_MM_dd");
                             //DATA::time = d + t;
-                            QDir dir(IMAGES_PATH + Line.mid(8,2));
+                            QDir dir(x.IMAGES_PATH + Line.mid(8,2));
                             if(!dir.exists())
                                 dir.mkpath(".");
-                            FileName = IMAGES_PATH + Line.mid(8,2) +"/" + d + t + ".jpg";
+                            FileName = x.IMAGES_PATH + Line.mid(8,2) +"/" + d + t + ".jpg";
                         }
                         QString  mac=Line.mid(8,2);
                         QString time=QTime::currentTime().toString("hh-mm-ss");
@@ -215,7 +216,7 @@ void Tranceiver::readData()
 //                    qDebug()<<data_web<<endl;
 //                      }
                     //qDebug()<<mac<<endl;
-                    WriteTextAppend(HISTORY_FILE, data);
+                    WriteTextAppend(x.HISTORY_FILE, data);
                     break;
                 }
             case 4: // Sensor Status
@@ -295,7 +296,7 @@ void Tranceiver::readData()
                     tmp += getStatus(f3);
                     tmp += "\n\n";
                     emit receivedData(tmp);
-                    FileData file(DATA_PATH);
+                    FileData file(x.DATA_PATH);
                     int mac = Line.mid(8,2).toInt();
                     qDebug()<<mac;
                     QString line = file.searchByMacString(mac);
@@ -355,7 +356,7 @@ void Tranceiver::readData()
                         emit tempAndHum1(tmp);
                         emit sendTandH(mac,temp,humi);
                         QString data = d+":"+t+":"+Line.mid(8,2) + ":" + QString::number(temp) + ":" + QString::number(humi);
-                        WriteTextAppend(HISTORY_FILE, data);
+                        WriteTextAppend(x.HISTORY_FILE, data);
                         break;
                     }
             default: break;

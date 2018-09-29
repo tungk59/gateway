@@ -30,16 +30,16 @@ static const uint qt_meta_data_QextSerialEnumerator[] = {
        2,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      21,   52,   57,   57, 0x05,
-      58,   52,   57,   57, 0x05,
+      27,   22,   21,   21, 0x05,
+      58,   22,   21,   21, 0x05,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_QextSerialEnumerator[] = {
-    "QextSerialEnumerator\0"
-    "deviceDiscovered(QextPortInfo)\0info\0"
-    "\0deviceRemoved(QextPortInfo)\0"
+    "QextSerialEnumerator\0\0info\0"
+    "deviceDiscovered(QextPortInfo)\0"
+    "deviceRemoved(QextPortInfo)\0"
 };
 
 void QextSerialEnumerator::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

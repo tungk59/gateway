@@ -8,6 +8,7 @@
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
+#include "readfile.h"
 
 double initLat=21.005739;
 double initLng=105.842308;
@@ -31,6 +32,7 @@ GPS::GPS(QObject *parent) :
 
 void GPS::readData()
 {
+    readfile x;
        if (port->bytesAvailable()) {
         QByteArray ba = port->readLine();
         QString Line(ba);
@@ -53,7 +55,7 @@ void GPS::readData()
                 DATA::lat = QString::number(lat, 'f', 6);
                 DATA::lng = QString::number(lng,'f', 6);
                 if(DATA::gps.isEmpty()){
-                    WriteTextAppend(GPS_FILE, location);
+                    WriteTextAppend(x.GPS_FILE, location);
                     //qDebug() << location;
                 }
                 else {
@@ -62,7 +64,7 @@ void GPS::readData()
                     QString pre_lng = tmp.value(1);
                     if( (fabs(lat - pre_lat.toDouble()) >= 0.000002) || (fabs(lng - pre_lng.toDouble()) >= 0.000002) )
                     {
-                        WriteTextAppend(GPS_FILE, location);
+                        WriteTextAppend(x.GPS_FILE, location);
                     }
                 }
                 DATA::gps = location;

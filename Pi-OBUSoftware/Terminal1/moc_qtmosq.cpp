@@ -30,17 +30,17 @@ static const uint qt_meta_data_qtmosq[] = {
        5,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-       7,   19,   19,   19, 0x05,
-      20,   19,   19,   19, 0x05,
-      38,   19,   19,   19, 0x05,
-      63,   19,   19,   19, 0x05,
-      79,   19,   19,   19, 0x05,
+       8,    7,    7,    7, 0x05,
+      20,    7,    7,    7, 0x05,
+      38,    7,    7,    7, 0x05,
+      63,    7,    7,    7, 0x05,
+      79,    7,    7,    7, 0x05,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_qtmosq[] = {
-    "qtmosq\0connected()\0\0messageSent(bool)\0"
+    "qtmosq\0\0connected()\0messageSent(bool)\0"
     "messageReceived(QString)\0connectEnable()\0"
     "subscribed()\0"
 };

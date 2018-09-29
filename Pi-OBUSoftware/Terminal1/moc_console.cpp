@@ -30,18 +30,18 @@ static const uint qt_meta_data_Console[] = {
        2,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-       8,   28,   33,   33, 0x05,
-      34,   33,   33,   33, 0x05,
+      14,    9,    8,    8, 0x05,
+      34,    8,    8,    8, 0x05,
 
  // methods: signature, parameters, type, tag, flags
-      45,   64,   33,   33, 0x02,
+      50,   45,    8,    8, 0x02,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Console[] = {
-    "Console\0getData(QByteArray)\0data\0\0"
-    "getEnter()\0printData(QString)\0text\0"
+    "Console\0\0data\0getData(QByteArray)\0"
+    "getEnter()\0text\0printData(QString)\0"
 };
 
 void Console::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

@@ -30,17 +30,17 @@ static const uint qt_meta_data_receivefromweb[] = {
        2,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      15,   29,   29,   29, 0x05,
-      30,   29,   29,   29, 0x05,
+      16,   15,   15,   15, 0x05,
+      30,   15,   15,   15, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      51,   29,   29,   29, 0x0a,
+      51,   15,   15,   15, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_receivefromweb[] = {
-    "receivefromweb\0requestWork()\0\0"
+    "receivefromweb\0\0requestWork()\0"
     "Workrequest(QString)\0doWork_web()\0"
 };
 

@@ -30,76 +30,75 @@ static const uint qt_meta_data_MainWindow[] = {
        1,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      11,   23,   23,   23, 0x05,
+      12,   11,   11,   11, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      24,   23,   23,   23, 0x08,
-      55,   23,   23,   23, 0x08,
-      72,   23,   23,   23, 0x08,
-      94,   23,   23,   23, 0x08,
-     117,   23,   23,   23, 0x08,
-     139,   23,   23,   23, 0x08,
-     156,   23,   23,   23, 0x08,
-     179,   23,   23,   23, 0x08,
-     203,   23,   23,   23, 0x08,
-     229,  250,   23,   23, 0x08,
-     252,   23,   23,   23, 0x08,
-     279,   23,   23,   23, 0x08,
-     298,   23,   23,   23, 0x08,
-     312,   23,   23,   23, 0x08,
-     329,  250,   23,   23, 0x08,
-     353,   23,   23,   23, 0x08,
-     378,   23,   23,   23, 0x08,
-     397,   23,   23,   23, 0x08,
-     416,   23,   23,   23, 0x08,
-     427,   23,   23,   23, 0x08,
-     447,   23,   23,   23, 0x08,
-     470,   23,   23,   23, 0x08,
-     487,   23,   23,   23, 0x08,
-     518,   23,   23,   23, 0x08,
-     551,   23,   23,   23, 0x08,
-     577,   23,   23,   23, 0x08,
-     599,   23,   23,   23, 0x08,
-     622,   23,   23,   23, 0x08,
-     640,   23,   23,   23, 0x08,
-     656,   23,   23,   23, 0x08,
-     668,   23,   23,   23, 0x08,
-     680,   23,   23,   23, 0x08,
-     692,   23,   23,   23, 0x08,
-     707,   23,   23,   23, 0x08,
-     725,   23,   23,   23, 0x08,
-     749,   23,   23,   23, 0x08,
-     767,   23,   23,   23, 0x08,
-     785,   23,   23,   23, 0x08,
-     800,   23,   23,   23, 0x08,
-     821,   23,   23,   23, 0x08,
-     842,   23,   23,   23, 0x08,
-     854,   23,   23,   23, 0x08,
-     865,   23,   23,   23, 0x08,
-     879,   23,   23,   23, 0x08,
-     896,  929,   23,   23, 0x08,
-     932,  250,   23,   23, 0x08,
-     964,   23,   23,   23, 0x08,
-     977,   23,   23,   23, 0x08,
-     993,   23,   23,   23, 0x08,
-    1004,   23,   23,   23, 0x08,
+      24,   11,   11,   11, 0x08,
+      55,   11,   11,   11, 0x08,
+      72,   11,   11,   11, 0x08,
+      94,   11,   11,   11, 0x08,
+     117,   11,   11,   11, 0x08,
+     139,   11,   11,   11, 0x08,
+     156,   11,   11,   11, 0x08,
+     179,   11,   11,   11, 0x08,
+     203,   11,   11,   11, 0x08,
+     231,  229,   11,   11, 0x08,
+     252,   11,   11,   11, 0x08,
+     279,   11,   11,   11, 0x08,
+     298,   11,   11,   11, 0x08,
+     312,   11,   11,   11, 0x08,
+     329,  229,   11,   11, 0x08,
+     353,   11,   11,   11, 0x08,
+     378,   11,   11,   11, 0x08,
+     397,   11,   11,   11, 0x08,
+     416,   11,   11,   11, 0x08,
+     427,   11,   11,   11, 0x08,
+     447,   11,   11,   11, 0x08,
+     470,   11,   11,   11, 0x08,
+     487,   11,   11,   11, 0x08,
+     518,   11,   11,   11, 0x08,
+     551,   11,   11,   11, 0x08,
+     577,   11,   11,   11, 0x08,
+     599,   11,   11,   11, 0x08,
+     622,   11,   11,   11, 0x08,
+     640,   11,   11,   11, 0x08,
+     656,   11,   11,   11, 0x08,
+     668,   11,   11,   11, 0x08,
+     680,   11,   11,   11, 0x08,
+     692,   11,   11,   11, 0x08,
+     707,   11,   11,   11, 0x08,
+     725,   11,   11,   11, 0x08,
+     749,   11,   11,   11, 0x08,
+     767,   11,   11,   11, 0x08,
+     785,   11,   11,   11, 0x08,
+     800,   11,   11,   11, 0x08,
+     821,   11,   11,   11, 0x08,
+     842,   11,   11,   11, 0x08,
+     854,   11,   11,   11, 0x08,
+     865,   11,   11,   11, 0x08,
+     879,   11,   11,   11, 0x08,
+     899,  896,   11,   11, 0x08,
+     932,  229,   11,   11, 0x08,
+     964,   11,   11,   11, 0x08,
+     977,   11,   11,   11, 0x08,
+     993,   11,   11,   11, 0x08,
+    1004,   11,   11,   11, 0x08,
 
  // methods: signature, parameters, type, tag, flags
-    1032,  250,   23,   23, 0x02,
+    1032,  229,   11,   11, 0x02,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0readySend()\0\0"
+    "MainWindow\0\0readySend()\0"
     "on_btngetNearestNode_clicked()\0"
     "onOptimizeMove()\0on_btnPrint_clicked()\0"
     "on_btnUpdate_clicked()\0on_btnClear_clicked()\0"
     "Send_Broadcast()\0autoTakePhoto(QString)\0"
     "on_pushButton_clicked()\0"
-    "on_pushButton_2_clicked()\0"
-    "sendCommand(int,int)\0,\0"
-    "onOpenCloseButtonClicked()\0"
+    "on_pushButton_2_clicked()\0,\0"
+    "sendCommand(int,int)\0onOpenCloseButtonClicked()\0"
     "onGpsData(QString)\0initMap(bool)\0"
     "initListSensor()\0onNodeJoin(int,QString)\0"
     "onImageReceived(QString)\0addMarker(QString)\0"
@@ -116,8 +115,9 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "SetupSerialPort()\0SendToServer()\0"
     "on_btnExit_clicked()\0on_btnView_clicked()\0"
     "sendtoWeb()\0sendMqtt()\0mqttConnect()\0"
-    "connectEnabled()\0sendMqttTandH(int,double,double)\0"
-    ",,\0sendImageToWeb(QString,QString)\0"
+    "connectEnabled()\0,,\0"
+    "sendMqttTandH(int,double,double)\0"
+    "sendImageToWeb(QString,QString)\0"
     "GetDataWeb()\0sendBroadcast()\0makePlot()\0"
     "WriteDatatoLogfile(QString)\0"
     "mySendCommand(int,int)\0"

@@ -30,20 +30,20 @@ static const uint qt_meta_data_HLed[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-       5,   22,   28,   28, 0x0a,
-      29,   28,   28,   28, 0x0a,
-      38,   51,   28,   28, 0x0a,
-      54,   28,   28,   28, 0x2a,
-      63,   77,   28,   28, 0x0a,
-      81,   28,   28,   28, 0x2a,
+      12,    6,    5,    5, 0x0a,
+      29,    5,    5,    5, 0x0a,
+      41,   38,    5,    5, 0x0a,
+      54,    5,    5,    5, 0x2a,
+      67,   63,    5,    5, 0x0a,
+      81,    5,    5,    5, 0x2a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_HLed[] = {
-    "HLed\0setColor(QColor)\0color\0\0toggle()\0"
-    "turnOn(bool)\0on\0turnOn()\0turnOff(bool)\0"
-    "off\0turnOff()\0"
+    "HLed\0\0color\0setColor(QColor)\0toggle()\0"
+    "on\0turnOn(bool)\0turnOn()\0off\0turnOff(bool)\0"
+    "turnOff()\0"
 };
 
 void HLed::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

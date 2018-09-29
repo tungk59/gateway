@@ -30,32 +30,32 @@ static const uint qt_meta_data_Tranceiver[] = {
        9,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      11,   33,   33,   33, 0x05,
-      34,   33,   33,   33, 0x05,
-      50,   33,   33,   33, 0x05,
-      73,   95,   33,   33, 0x05,
-      97,   33,   33,   33, 0x05,
-     117,   33,   33,   33, 0x05,
-     138,   95,   33,   33, 0x05,
-     173,   33,   33,   33, 0x05,
-     197,  226,   33,   33, 0x05,
+      12,   11,   11,   11, 0x05,
+      34,   11,   11,   11, 0x05,
+      50,   11,   11,   11, 0x05,
+      75,   73,   11,   11, 0x05,
+      97,   11,   11,   11, 0x05,
+     117,   11,   11,   11, 0x05,
+     138,   73,   11,   11, 0x05,
+     173,   11,   11,   11, 0x05,
+     200,  197,   11,   11, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-     229,   33,   33,   33, 0x0a,
-     240,   33,   33,   33, 0x0a,
+     229,   11,   11,   11, 0x0a,
+     240,   11,   11,   11, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Tranceiver[] = {
-    "Tranceiver\0receivedData(QString)\0\0"
+    "Tranceiver\0\0receivedData(QString)\0"
     "workRequested()\0ImageReceived(QString)\0"
-    "nodeJoin(int,QString)\0,\0tempAndHum(QString)\0"
+    ",\0nodeJoin(int,QString)\0tempAndHum(QString)\0"
     "tempAndHum1(QString)\0"
     "receiveCompletely(QString,QString)\0"
-    "motionDetected(QString)\0"
-    "sendTandH(int,double,double)\0,,\0"
-    "readData()\0doWork()\0"
+    "motionDetected(QString)\0,,\0"
+    "sendTandH(int,double,double)\0readData()\0"
+    "doWork()\0"
 };
 
 void Tranceiver::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

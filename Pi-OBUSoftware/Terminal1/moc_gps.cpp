@@ -30,18 +30,18 @@ static const uint qt_meta_data_GPS[] = {
        2,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-       4,   26,   26,   26, 0x05,
-      27,   26,   26,   26, 0x05,
+       5,    4,    4,    4, 0x05,
+      27,    4,    4,    4, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      43,   26,   26,   26, 0x0a,
-      54,   26,   26,   26, 0x0a,
+      43,    4,    4,    4, 0x0a,
+      54,    4,    4,    4, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_GPS[] = {
-    "GPS\0receivedData(QString)\0\0workRequested()\0"
+    "GPS\0\0receivedData(QString)\0workRequested()\0"
     "readData()\0doWork()\0"
 };
 

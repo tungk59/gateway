@@ -30,7 +30,9 @@ SOURCES += main.cpp \
     data.cpp \
     Dialog/serverdialog.cpp \
     receivefromweb.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    readfile.cpp \
+    confmqtt.cpp
 HEADERS += mainwindow.h \
     hled.h \
     console.h \
@@ -51,7 +53,9 @@ HEADERS += mainwindow.h \
     Dialog/serverdialog.h \
     receivefromweb.h \
     qcustomplot.h \
-    qtmosq.h
+    qtmosq.h \
+    readfile.h \
+    confmqtt.h
 FORMS += mainwindow.ui \
     Dialog/retasksensordialog.ui \
     Dialog/retskalldialog.ui \

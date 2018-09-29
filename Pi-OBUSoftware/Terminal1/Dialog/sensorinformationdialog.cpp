@@ -1,18 +1,19 @@
 #include "sensorinformationdialog.h"
 #include "ui_sensorinformationdialog.h"
 #include "mainwindow.h"
-
+#include "readfile.h"
 #include <QDebug>
 
 SensorInformationDialog::SensorInformationDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SensorInformationDialog)
 {
+    readfile x;
     ui->setupUi(this);
 
     connect(ui->cbxMac, SIGNAL(currentIndexChanged(QString)), this, SLOT(SetView(QString)));
 
-    FileData file(DATA_PATH);
+    FileData file(x.DATA_PATH);
     int N = file.length();
     QString line;
     QStringList lst;
@@ -32,12 +33,13 @@ SensorInformationDialog::SensorInformationDialog(int mac, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SensorInformationDialog)
 {
+    readfile x;
     startSensor = QString::number(mac);
     ui->setupUi(this);
 
     connect(ui->cbxMac, SIGNAL(currentTextChanged(QString)), this, SLOT(SetView(QString)));
 
-    FileData file(DATA_PATH);
+    FileData file(x.DATA_PATH);
     int N = file.length();
     int index;
     QString line;
@@ -71,7 +73,8 @@ QString SensorInformationDialog::getStatus(int stt)
 
 void SensorInformationDialog::SetView(QString mac)
 {
-    FileData file(DATA_PATH);
+    readfile x;
+    FileData file(x.DATA_PATH);
     QString line = file.searchByMac(mac.toInt());
     QStringList lst = line.split(",");
     QString str = lst.value(1) + "  ,  " + lst.value(2);

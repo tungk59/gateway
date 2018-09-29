@@ -30,14 +30,13 @@ static const uint qt_meta_data_SetupSerialPortDialog[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      22,   46,   46,   46, 0x08,
+      23,   22,   22,   22, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_SetupSerialPortDialog[] = {
-    "SetupSerialPortDialog\0on_btnRefresh_clicked()\0"
-    "\0"
+    "SetupSerialPortDialog\0\0on_btnRefresh_clicked()\0"
 };
 
 void SetupSerialPortDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

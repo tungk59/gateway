@@ -1,13 +1,15 @@
 #include "sensor.h"
 #include "filedata.h"
+#include "readfile.h"
 
 #include <QString>
 #include <QTextStream>
 #include <QStringList>
 
 Sensor::Sensor(int m, QObject *parent) : QObject(parent), mac(m){
+    readfile x;
     isJoin = false;
-    FileData data(DATA_PATH);
+    FileData data(x.DATA_PATH);
     QString line = data.searchByMac(mac);
     QStringList list = line.split(",");
     lat = list.value(1);

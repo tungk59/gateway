@@ -30,29 +30,29 @@ static const uint qt_meta_data_QextSerialPort[] = {
        1,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      15,   32,   39,   39, 0x05,
+      23,   16,   15,   15, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      40,   61,   39,   39, 0x0a,
-      66,   90,   39,   39, 0x0a,
-      95,   39,   39,   39, 0x0a,
-     121,   39,   39,   39, 0x0a,
-     147,   39,   39,   39, 0x0a,
-     169,   39,   39,   39, 0x0a,
-     195,   39,   39,   39, 0x0a,
-     220,   39,   39,   39, 0x0a,
-     237,  250,   39,   39, 0x0a,
-     254,   39,   39,   39, 0x2a,
-     263,  250,   39,   39, 0x0a,
-     276,   39,   39,   39, 0x2a,
-     285,   39,   39,   39, 0x08,
+      45,   40,   15,   15, 0x0a,
+      71,   66,   15,   15, 0x0a,
+      95,   15,   15,   15, 0x0a,
+     121,   15,   15,   15, 0x0a,
+     147,   15,   15,   15, 0x0a,
+     169,   15,   15,   15, 0x0a,
+     195,   15,   15,   15, 0x0a,
+     220,   15,   15,   15, 0x0a,
+     241,  237,   15,   15, 0x0a,
+     254,   15,   15,   15, 0x2a,
+     263,  237,   15,   15, 0x0a,
+     276,   15,   15,   15, 0x2a,
+     285,   15,   15,   15, 0x08,
 
  // properties: name, type, flags
-     298,  307, 0x0a095103,
-     315,  325, 0x0009510b,
+     306,  298, 0x0a095103,
+     325,  315, 0x0009510b,
 
  // enums: name, flags, count, data
-     325, 0x0,    2,   94,
+     315, 0x0,    2,   94,
 
  // enum data: key, value
      335, uint(QextSerialPort::Polling),
@@ -62,16 +62,16 @@ static const uint qt_meta_data_QextSerialPort[] = {
 };
 
 static const char qt_meta_stringdata_QextSerialPort[] = {
-    "QextSerialPort\0dsrChanged(bool)\0status\0"
-    "\0setPortName(QString)\0name\0"
-    "setQueryMode(QueryMode)\0mode\0"
+    "QextSerialPort\0\0status\0dsrChanged(bool)\0"
+    "name\0setPortName(QString)\0mode\0"
+    "setQueryMode(QueryMode)\0"
     "setBaudRate(BaudRateType)\0"
     "setDataBits(DataBitsType)\0"
     "setParity(ParityType)\0setStopBits(StopBitsType)\0"
     "setFlowControl(FlowType)\0setTimeout(long)\0"
-    "setDtr(bool)\0set\0setDtr()\0setRts(bool)\0"
-    "setRts()\0_q_canRead()\0portName\0QString\0"
-    "queryMode\0QueryMode\0Polling\0EventDriven\0"
+    "set\0setDtr(bool)\0setDtr()\0setRts(bool)\0"
+    "setRts()\0_q_canRead()\0QString\0portName\0"
+    "QueryMode\0queryMode\0Polling\0EventDriven\0"
 };
 
 void QextSerialPort::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

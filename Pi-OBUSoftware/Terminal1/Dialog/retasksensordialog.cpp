@@ -1,7 +1,7 @@
 #include "retasksensordialog.h"
 #include "ui_retasksensordialog.h"
 #include <QDebug>
-
+#include "readfile.h"
 RetaskSensorDialog::RetaskSensorDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RetaskSensorDialog)
@@ -78,7 +78,8 @@ QString RetaskSensorDialog::getStatus(int stt)
 
 void RetaskSensorDialog::SetView(QString mac)
 {
-    FileData file(DATA_PATH);
+    readfile x;
+    FileData file(x.DATA_PATH);
     QString line = file.searchByMac(mac.toInt());
     QStringList lst = line.split(",");
     f1 = lst.value(3).toInt();

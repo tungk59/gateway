@@ -30,14 +30,13 @@ static const uint qt_meta_data_EditSensorPlaceDialog[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      22,   39,   39,   39, 0x08,
+      23,   22,   22,   22, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_EditSensorPlaceDialog[] = {
-    "EditSensorPlaceDialog\0SetView(QString)\0"
-    "\0"
+    "EditSensorPlaceDialog\0\0SetView(QString)\0"
 };
 
 void EditSensorPlaceDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

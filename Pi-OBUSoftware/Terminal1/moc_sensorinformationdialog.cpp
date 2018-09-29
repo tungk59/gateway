@@ -30,15 +30,15 @@ static const uint qt_meta_data_SensorInformationDialog[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      24,   41,   41,   41, 0x08,
-      42,   41,   41,   41, 0x08,
+      25,   24,   24,   24, 0x08,
+      42,   24,   24,   24, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_SensorInformationDialog[] = {
-    "SensorInformationDialog\0SetView(QString)\0"
-    "\0on_btnClose_clicked()\0"
+    "SensorInformationDialog\0\0SetView(QString)\0"
+    "on_btnClose_clicked()\0"
 };
 
 void SensorInformationDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

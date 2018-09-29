@@ -30,15 +30,14 @@ static const uint qt_meta_data_RetaskSensorDialog[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      19,   58,   58,   58, 0x08,
+      20,   19,   19,   19, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_RetaskSensorDialog[] = {
-    "RetaskSensorDialog\0"
+    "RetaskSensorDialog\0\0"
     "on_cbxMac_currentIndexChanged(QString)\0"
-    "\0"
 };
 
 void RetaskSensorDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

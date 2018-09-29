@@ -11,6 +11,7 @@ FileData::FileData(QString f)
 
 void FileData::writeAppend(QString s)
 {
+
     QFile file(fname);
     if(file.open(QIODevice::Append))
     {
@@ -137,7 +138,7 @@ QString FileData::searchByMac(int m)
 {
     QFile file(fname);
     QString mac = QString::number(m);
-   // if(mac.toInt()<10)mac="0"+mac;
+    if(mac.toInt()<10)mac="0"+mac;
     if(file.open(QIODevice::ReadOnly))
     {
 

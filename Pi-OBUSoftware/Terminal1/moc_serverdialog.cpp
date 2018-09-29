@@ -30,22 +30,22 @@ static const uint qt_meta_data_ServerDialog[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      13,   36,   36,   36, 0x0a,
-      37,   36,   36,   36, 0x0a,
-      58,   98,   36,   36, 0x0a,
-     102,   36,   36,   36, 0x0a,
-     111,  141,   36,   36, 0x0a,
-     147,   36,   36,   36, 0x08,
+      14,   13,   13,   13, 0x0a,
+      37,   13,   13,   13, 0x0a,
+      62,   58,   13,   13, 0x0a,
+     102,   13,   13,   13, 0x0a,
+     117,  111,   13,   13, 0x0a,
+     147,   13,   13,   13, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_ServerDialog[] = {
-    "ServerDialog\0on_btnCancel_clicked()\0"
-    "\0on_btnSend_clicked()\0"
+    "ServerDialog\0\0on_btnCancel_clicked()\0"
+    "on_btnSend_clicked()\0loi\0"
     "loiSocket(QAbstractSocket::SocketError)\0"
-    "loi\0ketNoi()\0replyFinished(QNetworkReply*)\0"
-    "reply\0on_btnConnect_clicked()\0"
+    "ketNoi()\0reply\0replyFinished(QNetworkReply*)\0"
+    "on_btnConnect_clicked()\0"
 };
 
 void ServerDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)

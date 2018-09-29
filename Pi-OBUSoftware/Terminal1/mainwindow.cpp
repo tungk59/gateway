@@ -19,6 +19,8 @@
 #include "QPrinter"
 #include "QTextCursor"
 #include "qtmosq.h"
+#include "readfile.h"
+#include "confmqtt.h"
 //#include <QDateTime>
 
 
@@ -32,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
     qDebug()<<"Software is running";
     ui->setupUi(this);
     joinedMac = new int[20];
@@ -105,7 +106,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //connect(ui->webView, SIGNAL(loadFinished(bool)), this, SLOT(initMap(bool)));
     connect(ui->webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()),this,SLOT(populateJavaScriptWindowObject()));
     //Action
+
     initMap(true);
+
     connect(ui->actionLinphone, SIGNAL(triggered()), SLOT(startLinphone()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(close()));
     connect(ui->actionAbout_2, SIGNAL(triggered()), SLOT(ShowAbout()));
@@ -117,6 +120,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionStartup_Location_Map, SIGNAL(triggered()), SLOT(StartupLocation()));
     connect(ui->actionSerial_Port, SIGNAL(triggered()), SLOT(SetupSerialPort()));
     connect(ui->actionServer, SIGNAL(triggered()), SLOT(SendToServer()));
+
+
 
     //Graph
     connect(ui->btDraw,SIGNAL(clicked()),this,SLOT(makePlot()));
@@ -151,6 +156,9 @@ MainWindow::MainWindow(QWidget *parent) :
     lib_init();
     mqttConnect();
     qDebug()<<"okoko";
+    confmqtt x;
+    QByteArray a = x.topic2.toAscii();
+    qDebug()<< a;
 }
 
 /*
@@ -194,6 +202,11 @@ void MainWindow::changeEvent(QEvent *e)
  *
 */
 void MainWindow::mqttConnect(){
+    confmqtt x;
+    char* s;
+    QByteArray ba=x.hostMqtt.toLatin1();
+    s = ba.data();
+    //qDebug()<<x.hostMqtt;
    // qDebug()<<"mqtt!!"<<endl;
     mosq=new qtmosq();
     //thingsboard
@@ -203,28 +216,30 @@ void MainWindow::mqttConnect(){
     mosq->username_pw_set("s2IPV0EZVNwxTRYhNFrV");
 
     connect (mosq, SIGNAL(connected()), this, SLOT(connectEnabled()));
-    mosq->connect_async(hostMqtt,portMqtt);
+    mosq->connect_async(s,x.portMqtt);
     mosq->loop_start();
-
+    qDebug() <<s;
     //qDebug()<<"end";
 }
 void MainWindow::connectEnabled(){
     console->insertPlainText("khoi tao mqtt thanh cong!!");
 }
 void MainWindow::sendMqtt(){
+    confmqtt x;
+    QByteArray topic = x.topic1.toAscii();
     QString payload = "{";
 //    payload += "\"serialNumber\":\""; payload += serialNumber; payload += "\",";
 //    payload += "\"temperature\":"; payload += temperature; payload += ",";
 //    payload += "\"model\":\""; payload += model;
     payload += "\"}";
     QByteArray datasend=payload.toLocal8Bit();
-    QByteArray topic="sensors";
     mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
     console->insertPlainText("vua gui du lieu server!!");
 }
 
 void MainWindow::sendMqttTandH(int mac,double temp,double humi)
 {
+    confmqtt x;
     QString model="T1000";
     QString name="P1-SN-0";
     name.append(QString::number(mac));
@@ -251,7 +266,7 @@ void MainWindow::sendMqttTandH(int mac,double temp,double humi)
 
 //    qDebug()<<payload<<endl;
     QByteArray datasend=payload.toLocal8Bit();
-    QByteArray topic="v1/gateway/telemetry";
+    QByteArray topic= x.topic2.toAscii();
     mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
     console->insertPlainText("vua gui du lieu server!!");
 }
@@ -297,10 +312,11 @@ void MainWindow::initMap(bool isok)
 
 void MainWindow::initListSensor()
 {
+    readfile x;
     qDebug() << "init Lior";
-    FileData file(DATA_PATH);
-    FileData data(HISTORY_FILE);
-    FileData timeData(TIME_DETECT);
+    FileData file(x.DATA_PATH);
+    FileData data(x.HISTORY_FILE);
+    FileData timeData(x.TIME_DETECT);
     int N = file.length();
     int M = data.length();
     int P = timeData.length();
@@ -335,6 +351,8 @@ void MainWindow::initListSensor()
         }
         addMarker(str);
 
+
+
         ListSensor.push_back(new Sensor(lst.value(0).toInt()));
         ListSensor.last()->markerIndex = i;
         ListSensor[i]->lat = lst.value(1);
@@ -350,6 +368,7 @@ void MainWindow::initListSensor()
 
         if(lst.value(0) == lst.value(6))
             ui->webView->page()->mainFrame()->evaluateJavaScript(QString("setYellowMarker( %1 )").arg(i));
+
 
         QString vector = lst.value(1) + "," + lst.value(2);
         vector += "," + vector;
@@ -373,13 +392,14 @@ void MainWindow::initListSensor()
 
 void MainWindow::updateListSensor()
 {
+    readfile x;
     qDebug() << "Update List Sensor";
     //qDebug() << "Time Appear Predict: " << tPredict(movDetectTime.value("08"), movDetectTime.value("05"), d1, d2);
     ui->webView->page()->mainFrame()->evaluateJavaScript("removeAllMarkers()");
     ui->webView->page()->mainFrame()->evaluateJavaScript("clearAllMarkers()");
     ui->webView->page()->mainFrame()->evaluateJavaScript("removeAllArrows()");
-    FileData file(DATA_PATH);
-    FileData data(HISTORY_FILE);
+    FileData file(x.DATA_PATH);
+    FileData data(x.HISTORY_FILE);
     int N = file.length();
     int M = data.length();
     for(int i = 0; i < N; i++)
@@ -565,6 +585,7 @@ void MainWindow::on_btnExit_clicked()
 
 void MainWindow::AlwaysOpenPort()
 {
+    readfile x;
     if(tranceiverStarted)
     {
         if(tranceiver->port->isOpen()){
@@ -573,10 +594,10 @@ void MainWindow::AlwaysOpenPort()
             ui->btnOpenClose->setText("Open");
             console->insertPlainText("\n-------------- Port Closed -------------\n");
         } else {
-            if(tranceiver->port->portName().isEmpty()) tranceiver->port->setPortName(TRANCEIVER_PORT_DEFAULT);
+            if(tranceiver->port->portName().isEmpty()) tranceiver->port->setPortName(x.TRANCEIVER_PORT_DEFAULT);
             QSettings settings(m_organizationName, m_appName);
             QString tmp = settings.value("TranceiverBaudrate").toString();
-            if(tmp.isEmpty()) tranceiver->port->setBaudRate((BaudRateType)TRANCEIVER_BAUDRATE_DEFAULT);
+            if(tmp.isEmpty()) tranceiver->port->setBaudRate((BaudRateType)x.TRANCEIVER_BAUDRATE_DEFAULT);
             tranceiver->port->open(QIODevice::ReadWrite);
             led->turnOn();
             ui->btnOpenClose->setText("Close");
@@ -593,6 +614,7 @@ void MainWindow::AlwaysOpenPort()
 
 void MainWindow::onOpenCloseButtonClicked()
 {
+    readfile x;
     if(tranceiverStarted)
     {
         if(tranceiver->port->isOpen()){
@@ -601,10 +623,10 @@ void MainWindow::onOpenCloseButtonClicked()
             ui->btnOpenClose->setText("Open");
             console->insertPlainText("\n-------------- Port Closed -------------\n");
         } else {
-            if(tranceiver->port->portName().isEmpty()) tranceiver->port->setPortName(TRANCEIVER_PORT_DEFAULT);
+            if(tranceiver->port->portName().isEmpty()) tranceiver->port->setPortName(x.TRANCEIVER_PORT_DEFAULT);
             QSettings settings(m_organizationName, m_appName);
             QString tmp = settings.value("TranceiverBaudrate").toString();
-            if(tmp.isEmpty()) tranceiver->port->setBaudRate((BaudRateType)TRANCEIVER_BAUDRATE_DEFAULT);
+            if(tmp.isEmpty()) tranceiver->port->setBaudRate((BaudRateType)x.TRANCEIVER_BAUDRATE_DEFAULT);
             tranceiver->port->open(QIODevice::ReadWrite);
             led->turnOn();
             ui->btnOpenClose->setText("Close");
@@ -636,8 +658,9 @@ void MainWindow::onGpsData(QString data)
 
 void MainWindow::onNodeJoin(int mac, QString address)
 {
+    readfile x;
     //console->insertPlainText("Node Join!!!!\n");
-    FileData file(DATA_PATH);
+    FileData file(x.DATA_PATH);
     QString tmp = "["+QTime::currentTime().toString() + "] "+"Node " + QString::number(mac) + " gia nhap voi dia chi mang " + address + "\n";
     WriteDatatoLogfile(tmp);
     console->insertPlainText(tmp);
@@ -1007,15 +1030,16 @@ void MainWindow::StartupLocation()
  */
 void MainWindow::SetupPortSerial()
 {
+    readfile x;
     QSettings settings(m_organizationName, m_appName);
     QString port = settings.value("TranceiverPort").toString();
-    if(port.isEmpty()) port = TRANCEIVER_PORT_DEFAULT;
+    if(port.isEmpty()) port = x.TRANCEIVER_PORT_DEFAULT;
     tranceiver->port->setPortName(port);
     //int baudrate = settings.value("TranceiverBaudrate").toInt();
     tranceiver->port->setBaudRate(BAUD19200);
 
     port = settings.value("GpsPort").toString();
-    if(port.isEmpty()) port = GPS_PORT_DEFAULT;
+    if(port.isEmpty()) port = x.GPS_PORT_DEFAULT;
     gps->port->setPortName(port);
     //baudrate = settings.value("GpsBaudrate").toInt();
 //    gps->port->setBaudRate((BaudRateType) baudrate);
@@ -1024,6 +1048,7 @@ void MainWindow::SetupPortSerial()
 
 void MainWindow::SetupSerialPort()
 {
+    readfile x;
     SetupSerialPortDialog dialog(this);
     dialog.setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     dialog.setFixedSize(dialog.size());
@@ -1031,13 +1056,13 @@ void MainWindow::SetupSerialPort()
     {
         QSettings settings(m_organizationName, m_appName);
         QString port = settings.value("TranceiverPort").toString();
-        if(port.isEmpty()) port = TRANCEIVER_PORT_DEFAULT;
+        if(port.isEmpty()) port = x.TRANCEIVER_PORT_DEFAULT;
         tranceiver->port->setPortName(port);
         int baudrate = settings.value("TranceiverBaudrate").toInt();
         tranceiver->port->setBaudRate((BaudRateType)baudrate);
 
         port = settings.value("GpsPort").toString();
-        if(port.isEmpty()) port = GPS_PORT_DEFAULT;
+        if(port.isEmpty()) port = x.GPS_PORT_DEFAULT;
         gps->port->setPortName(port);
         baudrate = settings.value("GpsBaudrate").toInt();
         gps->port->setBaudRate((BaudRateType) baudrate);
@@ -1055,11 +1080,11 @@ void MainWindow::SendToServer()
 //Push Button
 void MainWindow::on_btnView_clicked()
 {
+    readfile x;
     QFileDialog dialog(this);
     dialog.setNameFilter (tr("Image (*.png *.xpm *.jpg *jpeg)"));
     dialog.setViewMode (QFileDialog::Detail);
-    QString fileName= QFileDialog::getOpenFileName (this,tr("Open Image"),IMAGES_PATH
-                                                        ,tr("Image File (*.png *.jpg *.bmp *jpeg)"));
+    QString fileName= QFileDialog::getOpenFileName (this,tr("Open Image"),x.IMAGES_PATH,tr("Image File (*.png *.jpg *.bmp *jpeg)"));
     if(!fileName.isEmpty ()){
         QImage image(fileName);
         ui->lblImage->setPixmap (QPixmap::fromImage (image));
@@ -1160,6 +1185,7 @@ void MainWindow::sendImageToWeb(QString imax,QString mac){
 //    http1->get(request);
 //    updateListSensor();
     //qDebug() << "adsf";
+    confmqtt x;
     QString str;
     QByteArray im;
     int hex;
@@ -1196,13 +1222,14 @@ void MainWindow::sendImageToWeb(QString imax,QString mac){
 
 //    qDebug()<<payload<<endl;
     QByteArray datasend=payload.toLocal8Bit();
-    QByteArray topic="v1/gateway/telemetry";
+    QByteArray topic= x.topic2.toAscii();
     mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
     console->insertPlainText("vua gui du lieu server!!");
 }
 
 QString MainWindow::findNearestNode(){
-    FileData file(DATA_PATH);
+    readfile x;
+    FileData file(x.DATA_PATH);
     int N = file.length();
     double *dis = new double[N];
     for(int i = 0;i < N; i++){
@@ -1243,6 +1270,7 @@ int MainWindow::tPredict(QTime t1, QTime t2, double d1, double d2){
 }
 
 void MainWindow::autoTakePhoto(QString mac){
+    readfile x;
     QString my_mac = hash.value(mac);
     QTime t = QTime::currentTime();
     bool ok;
@@ -1253,7 +1281,7 @@ void MainWindow::autoTakePhoto(QString mac){
         sendCommand(my_mac.toInt(&ok,10), 1);
         movDetectTime[my_mac] = t;
         QString str = my_mac + ":" + t.toString("hh:mm:ss");
-        WriteTextAppend(TIME_DETECT, str );
+        WriteTextAppend(x.TIME_DETECT, str );
         //qDebug() << movDetectTime.value(my_mac);
     }
     if(mac == "09"){
@@ -1263,7 +1291,7 @@ void MainWindow::autoTakePhoto(QString mac){
             console->insertPlainText("Doi tuong tracking xuat hien tai Sensor 09, gui lenh chup anh\n");
             sendCommand(my_mac.toInt(&ok, 10), 1);
             QString str = my_mac + ":" + t.toString("hh:mm:ss");
-            WriteTextAppend(TIME_DETECT, str );
+            WriteTextAppend(x.TIME_DETECT, str );
             movDetectTime[my_mac] = t;
             detectedFlag = true;
         }
@@ -1272,7 +1300,7 @@ void MainWindow::autoTakePhoto(QString mac){
             sendCommand(my_mac.toInt(&ok,10), 1);
             movDetectTime[my_mac] = t;
             QString str = my_mac + ":" + t.toString("hh:mm:ss");
-            WriteTextAppend(TIME_DETECT, str );
+            WriteTextAppend(x.TIME_DETECT, str );
         }
     }
     //updateListSensor();
@@ -1399,7 +1427,8 @@ void MainWindow::on_btnPrint_clicked()
 
 void MainWindow::onOptimizeMove()
 {
-    FileData sensor(DATA_PATH);
+    readfile x;
+    FileData sensor(x.DATA_PATH);
     double p=0, q=0, r, m=0, u, v, arg;
     for(int i=0; i<sensor.length(); i++){
         if(ListSensor[i]->cur_temp != 0){
@@ -1467,7 +1496,8 @@ void MainWindow::findLastPoint(QString &lat2, QString &lng2, double lat1, double
 
 void MainWindow::on_btngetNearestNode_clicked()
 {
-    FileData file(DATA_PATH);
+    readfile x;
+    FileData file(x.DATA_PATH);
     int N = file.length();
     double *dis = new double[N];
     for(int i=0; i<N; i++){
@@ -1516,6 +1546,7 @@ void MainWindow::mySendCommand(int mac, int cmd)
 }
 
 void MainWindow::makePlot(){
+    readfile x;
     ui->Plot->clearPlottables();
     ui->Plot->replot();
     ui->Plot_hum->clearPlottables();
@@ -1523,7 +1554,7 @@ void MainWindow::makePlot(){
     QStringList temp,hump,h,m;
     QList<double> t;
     QString date = ui->dateEdit->text();
-    FileData data(HISTORY_FILE);
+    FileData data(x.HISTORY_FILE);
     int M = data.length();
     qDebug()<<M;
     for(int i=1;i<M+1;i++)
