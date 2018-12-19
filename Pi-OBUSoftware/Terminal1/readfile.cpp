@@ -1,7 +1,7 @@
 #include "readfile.h"
 readfile::readfile()
 {
-    QFile File1(DATA_SUPPORT);
+    QFile File1(conf.DATA_SUPPORT);
     File1.open(QIODevice::ReadWrite);
     QTextStream in(&File1);
     this->IMAGES_PATH = in.readLine();

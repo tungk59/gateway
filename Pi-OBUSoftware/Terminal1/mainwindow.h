@@ -101,6 +101,7 @@ private slots:
     void onTranceiverData(QString);
     void onTempAndHum(QString);
     void onTempAndHum1(QString);
+    void oncompleteLux(QString);
     //checkbox
     void onGpsStatus(bool);
     //Action
@@ -124,6 +125,7 @@ private slots:
     void mqttConnect();
     void connectEnabled();
     void sendMqttTandH(int,double,double);
+    void sendMqttLux(int,double);
     //
     void sendImageToWeb(QString,QString);
     void GetDataWeb();

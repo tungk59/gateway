@@ -4,6 +4,7 @@
 #include "data.h"
 #include "QDir"
 #include "readfile.h"
+#include <qmath.h>
 Tranceiver::Tranceiver(QObject *parent) :
     QObject(parent)
 {
@@ -44,6 +45,7 @@ int Tranceiver::CheckCode(QString code)
     if(!code.compare("#SD")) return 5;
     if(!code.compare("#SN")) return 6;
     if(!code.compare("#AD")) return 7;
+    if(!code.compare("#AS")) return 8;
     if(!code.compare("#RA")) return 1;
     return 0;
 }
@@ -202,20 +204,6 @@ void Tranceiver::readData()
                     emit tempAndHum(tmp);
                     emit sendTandH(mac,temp,humi);
                     QString data = d+":"+t+":"+Line.mid(8,2) + ":" + QString::number(temp) + ":" + QString::number(humi);
-//                    qDebug() << "data debug"<<data<<endl;
-//                    if(true){
-//                    //QString data_web="https://api.thingspeak.com/update?api_key=GRRI8J5BWT69VFHG&field2=";
-//                    QString data_web="http://tora1996.pythonanywhere.com/?";
-//                    //QString data_web="http://192.168.0.6:8000/get/?";
-//                    http2= new QNetworkAccessManager(this);
-//                    QString id= QString::number(mac);
-//                    data_web.append("temp="+QString::number(temp)+"&humi="+QString::number(humi)+"&sensor="+id+"&time="+QTime::currentTime().toString()+' '+d);
-//                    //data_web.append(QString::number(temp));
-//                    QNetworkRequest request = QNetworkRequest(QUrl(data_web));
-//                    http2->get(request);
-//                    qDebug()<<data_web<<endl;
-//                      }
-                    //qDebug()<<mac<<endl;
                     WriteTextAppend(x.HISTORY_FILE, data);
                     break;
                 }
@@ -357,6 +345,28 @@ void Tranceiver::readData()
                         emit sendTandH(mac,temp,humi);
                         QString data = d+":"+t+":"+Line.mid(8,2) + ":" + QString::number(temp) + ":" + QString::number(humi);
                         WriteTextAppend(x.HISTORY_FILE, data);
+                        break;
+                    }
+                case 8:// Take lux
+                    {
+                        bool ok;
+                        unsigned char lsb = Line.mid(10,2).toUInt(&ok, 16);
+                        unsigned char msb = Line.mid(12,2).toUInt(&ok, 16);
+                        unsigned int exponent=lsb>>4;
+                        qDebug()<<exponent;
+
+                        unsigned int mantissa=((lsb&0x0F)<<4)|(msb&0x0F);
+                                                qDebug()<<mantissa;
+                        double lux=qPow(2,exponent)*mantissa*0.045;
+                        //DATA::lux=QString::number(qPow(2,exponent)*mantissa*0.045);
+//                        qDebug("xxxx:");
+                        qDebug()<<lux;
+                        int mac= Line.mid(8,2).toUInt(&ok);
+                        QString tmp = Line.mid(8,2) + ":" + Line.mid(4,4) + ":" + QString::number(lux);
+                        emit completeLux(tmp);
+                        emit sendLux(mac,lux);
+//                        QString data = d+":"+t+":"+Line.mid(8,2) + ":" + QString::number(temp) + ":" + QString::number(humi);
+//                        WriteTextAppend(x.HISTORY_FILE, data);
                         break;
                     }
             default: break;

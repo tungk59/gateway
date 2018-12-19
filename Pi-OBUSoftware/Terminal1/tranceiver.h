@@ -28,10 +28,13 @@ signals:
     void nodeJoin(int, QString);
     void tempAndHum(QString);
     void tempAndHum1(QString);
+
     void receiveCompletely(QString,QString);
     void motionDetected(QString);
     //nxt mqtt
     void sendTandH(int,double,double);
+    void completeLux(QString);
+    void sendLux(int,double);
     //
 
 public slots:

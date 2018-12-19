@@ -29,7 +29,7 @@ class WebPage : public QWebPage
     public:  WebPage(QObject * p = 0) : QWebPage(p) {}
     private: QString userAgentForUrl(const QUrl&) const { return "Chrome/1.0"; }
 };
-
+confmqtt xx;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -96,7 +96,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(tranceiver, SIGNAL(tempAndHum(QString)), SLOT(onTempAndHum(QString)));
     connect(tranceiver, SIGNAL(tempAndHum1(QString)), SLOT(onTempAndHum1(QString)));
     connect(tranceiver,SIGNAL(sendTandH(int,double,double)),SLOT(sendMqttTandH(int,double,double)));
-
+    connect(tranceiver, SIGNAL(completeLux(QString)), SLOT(oncompleteLux(QString)));
+    connect(tranceiver,SIGNAL(sendLux(int,double)),SLOT(sendMqttLux(int,double)));
     //Tab Map
     ui->webView->setPage( new QWebPage() );
     loadHtmlPage();
@@ -148,17 +149,11 @@ MainWindow::MainWindow(QWidget *parent) :
     fileName = "/home/lab411/Desktop/LogfileUAV/logfile_" + QDate::currentDate().toString() + "_" + QTime::currentTime().toString();
     AlwaysOpenPort();
     SetupPortSerial();
-    UAVautoSend = new QTimer(); // creat timer object
-    UAVautoSend->start(time_out);// value time out
-//    connect(UAVautoSend, SIGNAL(timeout()), this, SLOT(sendBroadcast()));
 
 //    </Chinh sua code cho UAV>
     lib_init();
     mqttConnect();
     qDebug()<<"okoko";
-    confmqtt x;
-    QByteArray a = x.topic2.toAscii();
-    qDebug()<< a;
 }
 
 /*
@@ -202,10 +197,12 @@ void MainWindow::changeEvent(QEvent *e)
  *
 */
 void MainWindow::mqttConnect(){
-    confmqtt x;
-    char* s;
-    QByteArray ba=x.hostMqtt.toLatin1();
+    //confmqtt x;
+    char* s,*access;
+    QByteArray ba=xx.hostMqtt.toLatin1();
     s = ba.data();
+    ba=xx.accessToken.toLatin1();
+    access=ba.data();
     //qDebug()<<x.hostMqtt;
    // qDebug()<<"mqtt!!"<<endl;
     mosq=new qtmosq();
@@ -213,20 +210,23 @@ void MainWindow::mqttConnect(){
 //    mosq->username_pw_set("vFxbwpQ04fzVqrxnxihI",NULL);
 
     //mqttcloud
-    mosq->username_pw_set("s2IPV0EZVNwxTRYhNFrV");
+    //qDebug(x.accessToken.toAscii());
+//    qDebug(x.hostMqtt.toLatin1());
+//    qDebug()<<x.topic1;
+    mosq->username_pw_set(access);
 
     connect (mosq, SIGNAL(connected()), this, SLOT(connectEnabled()));
-    mosq->connect_async(s,x.portMqtt);
+    mosq->connect_async(s,xx.portMqtt);
     mosq->loop_start();
-    qDebug() <<s;
+    //qDebug() <<s;
     //qDebug()<<"end";
 }
 void MainWindow::connectEnabled(){
     console->insertPlainText("khoi tao mqtt thanh cong!!");
 }
 void MainWindow::sendMqtt(){
-    confmqtt x;
-    QByteArray topic = x.topic1.toAscii();
+//    confmqtt x;
+    QByteArray topic = xx.topic1.toAscii();
     QString payload = "{";
 //    payload += "\"serialNumber\":\""; payload += serialNumber; payload += "\",";
 //    payload += "\"temperature\":"; payload += temperature; payload += ",";
@@ -239,7 +239,7 @@ void MainWindow::sendMqtt(){
 
 void MainWindow::sendMqttTandH(int mac,double temp,double humi)
 {
-    confmqtt x;
+//    confmqtt x;
     QString model="T1000";
     QString name="P1-SN-0";
     name.append(QString::number(mac));
@@ -264,11 +264,34 @@ void MainWindow::sendMqttTandH(int mac,double temp,double humi)
 //        payload += "\"model\":\""; payload += model;
 //    payload+="\"}";
 
-//    qDebug()<<payload<<endl;
+    qDebug()<<payload<<endl;
     QByteArray datasend=payload.toLocal8Bit();
-    QByteArray topic= x.topic2.toAscii();
+    QByteArray topic= xx.topic2.toAscii();
     mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
-    console->insertPlainText("vua gui du lieu server!!");
+    console->insertPlainText("vua gui du lieu nhiet do - do am len server!!! \r\n");
+}
+void MainWindow::sendMqttLux(int mac,double lux)
+{
+//    confmqtt x;
+    QString model="T1000";
+    QString name="P1-SN-0";
+    name.append(QString::number(mac));
+    //qDebug()<<name;
+    //nxt sua
+    QDateTime current = QDateTime::currentDateTime();
+    uint timestame = current.toTime_t();
+   // qDebug()<<timestame;
+    QString payload = "{\"";
+    payload +=name;
+    payload +="\": [{\"ts\":";
+    payload +=QString::number(timestame);payload+="000,\"values\":";
+    payload += "{\"luminance\":"; payload += QString::number(lux);
+    payload += "}}]}";
+    qDebug()<<payload<<endl;
+    QByteArray datasend=payload.toLocal8Bit();
+    QByteArray topic= xx.topic2.toAscii();
+    mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
+    console->insertPlainText("vua gui du lieu anh sang len server!!! \r\n");
 }
 //end code mqtt
 void MainWindow::loadHtmlPage()
@@ -566,6 +589,21 @@ void MainWindow::sendCommand(int mac, int cmd)
     case 8: // Warning level 5
         Cmd = "0000051$";
         break;
+    case 9: // take illuminance
+        if(mac < 10){
+            DATA::mac = "0" + QString::number(mac);
+           // qDebug()<< "mac send data :" <<DATA::mac<<endl;
+        }
+        else{
+            DATA::mac = QString::number(mac);
+        }
+        DATA::Ip = Ip;
+        qDebug()<<"cmd truoc:"<<Cmd<<endl;
+        Cmd += "600$";
+        qDebug()<<"ip data:"<<DATA::Ip<<endl;
+        qDebug()<<"cmd data:"<<Cmd<<endl;
+        break;
+        break;
 
     default: break;
     }
@@ -847,8 +885,9 @@ void MainWindow::onTempAndHum(QString data)
 //        ui->webView->page()->mainFrame()->evaluateJavaScript(QString("addTempVector(%1)").arg(vector));
 //    }
     receivedFlag = true;
-    emit readySend();
+//    emit readySend();
 }
+
 void MainWindow::onTempAndHum1(QString data)
 {
     QString tmp;
@@ -897,7 +936,29 @@ void MainWindow::onTempAndHum1(QString data)
 //        ui->webView->page()->mainFrame()->evaluateJavaScript(QString("addTempVector(%1)").arg(vector));
 //    }
     receivedFlag = true;
-    emit readySend();
+//    emit readySend();
+}
+void MainWindow::oncompleteLux(QString data)
+{
+    QString tmp;
+    QStringList data_lst = data.split(":");
+    console->moveCursor(QTextCursor::End);
+//    FileData file(DATA_PATH);
+    QString mac = data_lst.value(0);
+    //int index  = getIndexMarker(mac.toInt());
+    //ListSensor[index]->cur_temp = data_lst.value(2).toDouble();
+
+    tmp = "\n["+QTime::currentTime().toString()+"] " +"Thong tin luminance tu sensor ";
+    tmp += data_lst.value(0);
+    tmp += ", dia chi Ip ";
+    tmp += data_lst.value(1);
+    tmp += "\nLuminance:        ";
+    tmp += data_lst.value(2);
+    tmp += "\n";
+
+    //WriteDatatoLogfile(tmp);
+    console->insertPlainText(tmp + "\n");
+    receivedFlag = true;
 }
 
 
@@ -1174,18 +1235,6 @@ void MainWindow::on_btnClear_clicked()
 }
 
 void MainWindow::sendImageToWeb(QString imax,QString mac){
-    //qDebug() << "Sending Image To Web";
-    //qDebug() << DATA::mac;
-    //qDebug() << DATA::Ip;
-//    QString dataSend = "RC:" + DATA::Ip + DATA::mac + DATA::img;
-//    qDebug() << dataSend;
-//    QString url = "http://lab411s.esy.es/sg/rx.php?data=";
-//    url+=dataSend;
-//    QNetworkRequest request = QNetworkRequest(QUrl(url));
-//    http1->get(request);
-//    updateListSensor();
-    //qDebug() << "adsf";
-    confmqtt x;
     QString str;
     QByteArray im;
     int hex;
@@ -1199,32 +1248,38 @@ void MainWindow::sendImageToWeb(QString imax,QString mac){
         im[i]= (char) hex;
     }
     QString ima=QString::fromAscii(im.toBase64());
-    qDebug()<<ima;
+    //qDebug()<<ima;
+    int a=ima.length();
+//    int i=0;
+    qDebug()<<a;
+    QString image;
     QDateTime current = QDateTime::currentDateTime();
     uint timestame = current.toTime_t();
     QString name="P1-SN-";
     name.append(mac);
    // qDebug()<<timestame;
-    QString payload = "{\"";
-    payload +=name;
-    payload +="\": [{\"ts\":";
-    payload +=QString::number(timestame);payload+="000,\"values\":";
-    payload += "{\"image\":\""; payload += QString::fromAscii(im.toBase64().data());
-    payload += "\"}}]}";
-   // qDebug()<<"payload"<<payload<<endl;
-/*using tb-gateway*/
-//    QString payload="{";
-//        payload += "\"serialNumber\":\""; payload +=name ; payload += "\",";
-//        payload += "\"temperature\":"; payload += QString::number(temp); payload += ",";
-//        payload += "\"humidity\":"; payload += QString::number(humi); payload += ",";
-//        payload += "\"model\":\""; payload += model;
-//    payload+="\"}";
+    for(int i=0; i<5; i++){
+        if(i==4)ima.mid(i*a/5);
+        else
+            image=ima.mid(i*a/5,a/5);
+        QString payload = "{\"";
+        payload +=name;
+    //    payload +="\": {\"ts\":";
+    //    payload +=QString::number(timestame);payload+="000,\"values\":";
+    //    payload += "{\"image\":\""; payload += QString::fromAscii(im.toBase64().data());
+    //    payload += "\"}}}";
+        payload +="\": [{\"ts\":";
+        payload +=QString::number(timestame);payload+="000,\"values\":";
+        payload += "{\"image"; payload+=QString::number(i); payload+="\":\""; payload += image;
+        payload += "\"}}]}";
+        qDebug()<<payload<<endl;
 
-//    qDebug()<<payload<<endl;
-    QByteArray datasend=payload.toLocal8Bit();
-    QByteArray topic= x.topic2.toAscii();
-    mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
-    console->insertPlainText("vua gui du lieu server!!");
+        QByteArray datasend=payload.toLocal8Bit();
+        QByteArray topic= xx.topic2.toAscii();
+        mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
+    }
+
+    console->insertPlainText("vua gui du lieu image len server!!!\n\r");
 }
 
 QString MainWindow::findNearestNode(){

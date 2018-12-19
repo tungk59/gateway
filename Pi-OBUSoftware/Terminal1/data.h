@@ -16,6 +16,7 @@ public:
     static QString str;
     static QString img;
     static QString time;
+    static QString lux;
 
 };
 

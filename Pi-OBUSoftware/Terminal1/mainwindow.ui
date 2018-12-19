@@ -197,6 +197,11 @@
         <string>Warning Level 5</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Take Illuminance</string>
+       </property>
+      </item>
      </widget>
      <widget class="QComboBox" name="boxSensor">
       <property name="geometry">

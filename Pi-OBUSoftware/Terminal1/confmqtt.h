@@ -14,6 +14,8 @@ public:
     int portMqtt;
     QString topic1;
     QString topic2;
+    QString accessToken;
+    define conf;
 
 };
 

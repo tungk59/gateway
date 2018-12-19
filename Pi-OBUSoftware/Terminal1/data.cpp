@@ -14,3 +14,4 @@ QString DATA::lng = "";
 QString DATA::str = "";
 QString DATA::img = "";
 QString DATA::time = "";
+QString DATA::lux = "";

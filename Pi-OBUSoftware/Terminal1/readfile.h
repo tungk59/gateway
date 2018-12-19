@@ -19,6 +19,7 @@ public:
     int TRANCEIVER_BAUDRATE_DEFAULT;
     QString GPS_PORT_DEFAULT;
     int GPS_BAUDRATE_DEFAULT;
+    define conf;
 //    QString hostMqtt;
 //    int portMqtt;
 

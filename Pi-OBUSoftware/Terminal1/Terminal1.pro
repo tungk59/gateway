@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2016-03-31T16:51:26
 # -------------------------------------------------
-QT += core \
+QT += core\
     gui
 QT += printsupport
 QT += webkitwidgets
@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     receivefromweb.cpp \
     qcustomplot.cpp \
     readfile.cpp \
-    confmqtt.cpp
+    confmqtt.cpp \
+    define.cpp
 HEADERS += mainwindow.h \
     hled.h \
     console.h \
