@@ -603,6 +603,61 @@ void MainWindow::sendCommand(int mac, int cmd)
         qDebug()<<"ip data:"<<DATA::Ip<<endl;
         qDebug()<<"cmd data:"<<Cmd<<endl;
         break;
+    case 10:
+        if(mac < 10){
+            DATA::mac = "0" + QString::number(mac);
+           // qDebug()<< "mac send data :" <<DATA::mac<<endl;
+        }
+        else{
+            DATA::mac = QString::number(mac);
+        }
+        DATA::Ip = Ip;
+        qDebug()<<"cmd truoc:"<<Cmd<<endl;
+        Cmd += "610$";
+        qDebug()<<"ip data:"<<DATA::Ip<<endl;
+        qDebug()<<"cmd data:"<<Cmd<<endl;
+        break;
+    case 11:
+        if(mac < 10){
+            DATA::mac = "0" + QString::number(mac);
+           // qDebug()<< "mac send data :" <<DATA::mac<<endl;
+        }
+        else{
+            DATA::mac = QString::number(mac);
+        }
+        DATA::Ip = Ip;
+        qDebug()<<"cmd truoc:"<<Cmd<<endl;
+        Cmd += "620$";
+        qDebug()<<"ip data:"<<DATA::Ip<<endl;
+        qDebug()<<"cmd data:"<<Cmd<<endl;
+        break;
+    case 12:
+        if(mac < 10){
+            DATA::mac = "0" + QString::number(mac);
+           // qDebug()<< "mac send data :" <<DATA::mac<<endl;
+        }
+        else{
+            DATA::mac = QString::number(mac);
+        }
+        DATA::Ip = Ip;
+        qDebug()<<"cmd truoc:"<<Cmd<<endl;
+        Cmd += "630$";
+        qDebug()<<"ip data:"<<DATA::Ip<<endl;
+        qDebug()<<"cmd data:"<<Cmd<<endl;
+        break;
+    case 13:
+        if(mac < 10){
+            DATA::mac = "0" + QString::number(mac);
+           // qDebug()<< "mac send data :" <<DATA::mac<<endl;
+        }
+        else{
+            DATA::mac = QString::number(mac);
+        }
+        DATA::Ip = Ip;
+        qDebug()<<"cmd truoc:"<<Cmd<<endl;
+        Cmd += "640$";
+        qDebug()<<"ip data:"<<DATA::Ip<<endl;
+        qDebug()<<"cmd data:"<<Cmd<<endl;
         break;
 
     default: break;
