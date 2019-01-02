@@ -8,6 +8,8 @@ public:
     DATA();
     static QString temp;
     static QString hump;
+    static double temp_t;
+    static double hump_t;
     static QString gps;
     static QString mac;
     static QString Ip;
@@ -17,6 +19,7 @@ public:
     static QString img;
     static QString time;
     static QString lux;
+    static double lux_t;
 
 };
 

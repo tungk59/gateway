@@ -46,7 +46,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->layConsole->addWidget(console);
     led = new HLed();
     led->turnOff();
-    ui->layLed->addWidget(led);
+    QString pic_path=QDir::currentPath().toAscii()+"/logo/logo.jpg";
+    QPixmap pix(pic_path);
+    ui->lb_pic->setPixmap(pix);
+//    ui->layLed->addWidget(led);
 
     //init Data
     hash["62"] = "05";
@@ -77,9 +80,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(gps, SIGNAL(workRequested()), thread_gps, SLOT(start()));
     connect(thread_gps, SIGNAL(started()), gps, SLOT(doWork()));
     connect(gps, SIGNAL(receivedData(QString)), SLOT(onGpsData(QString)));
-    connect(ui->cbxGps, SIGNAL(toggled(bool)), SLOT(onGpsStatus(bool)));
-    connect(ui->cbxAllSensor, SIGNAL(toggled(bool)), SLOT(ShowAllSensor(bool)));
-    connect(ui->cbxJoinedSensor, SIGNAL(toggled(bool)), SLOT(ShowJoinedSensor(bool)));
 
     // Tranceiver
     tranceiver = new Tranceiver();
@@ -98,15 +98,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(tranceiver,SIGNAL(sendTandH(int,double,double)),SLOT(sendMqttTandH(int,double,double)));
     connect(tranceiver, SIGNAL(completeLux(QString)), SLOT(oncompleteLux(QString)));
     connect(tranceiver,SIGNAL(sendLux(int,double)),SLOT(sendMqttLux(int,double)));
-    //Tab Map
-    ui->webView->setPage( new QWebPage() );
-    loadHtmlPage();
 
-   // ui->webView->page()->mainFrame()->addToJavaScriptWindowObject("jsConsole", console);
-    ui->webView->page()->mainFrame()->addToJavaScriptWindowObject("myObject", this);
-    //connect(ui->webView, SIGNAL(loadFinished(bool)), this, SLOT(initMap(bool)));
-    connect(ui->webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()),this,SLOT(populateJavaScriptWindowObject()));
-    //Action
+
+
 
     initMap(true);
 
@@ -124,8 +118,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-    //Graph
-    connect(ui->btDraw,SIGNAL(clicked()),this,SLOT(makePlot()));
+
 
     connect(ui->bt_Broadcast, SIGNAL(clicked()), SLOT(sendBroadcast()));
     //nxt cmt
@@ -133,7 +126,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->btnShowVector, SIGNAL(clicked()), this, SLOT(onOptimizeMove()));
 
-    setWindowTitle(tr("Patrolling Software by LAB411 "));
+    setWindowTitle(tr("Amsterdam Team "));
 
     //SetupSerialPort(); //Open dialog config Port cho Emboard va GPS khi mois chay chuong trinh
     //populateJavaScriptWindowObject();
@@ -145,7 +138,7 @@ MainWindow::MainWindow(QWidget *parent) :
      * thiet dat thoi gian time_out cho UAV gui lenh lay du lieu
      */
 
-    int time_out = 30000;
+   // int time_out = 30000;
     fileName = "/home/lab411/Desktop/LogfileUAV/logfile_" + QDate::currentDate().toString() + "_" + QTime::currentTime().toString();
     AlwaysOpenPort();
     SetupPortSerial();
@@ -303,20 +296,16 @@ void MainWindow::loadHtmlPage()
         return;
     }
 
-    QTextStream stream( & htmlFile );
-    QString html = stream.readAll();
-    ui->webView->setHtml( html );
+
 }
 
 void MainWindow::errorOccured(QString error)
 {
     QMessageBox::warning(this, trUtf8("Error"), error);
 }
-void MainWindow::populateJavaScriptWindowObject()
-{
-    qDebug() << "populateJavaScriptWindowObject";
-    ui->webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
-}
+//void MainWindow::populateJavaScriptWindowObject()
+//{
+//}
 
 void MainWindow::initMap(bool isok)
 {
@@ -329,7 +318,7 @@ void MainWindow::initMap(bool isok)
     QString zm = settings.value("zoomStartup").toString();
     if(zm.isEmpty()) zm = "8";
     QString str = place + ", " + zm;
-    ui->webView->page()->mainFrame()->evaluateJavaScript(QString("initialize( %1 )").arg(str));
+
     initListSensor();
 }
 
@@ -372,7 +361,7 @@ void MainWindow::initListSensor()
                 break;
             }
         }
-        addMarker(str);
+//        addMarker(str);
 
 
 
@@ -389,15 +378,8 @@ void MainWindow::initListSensor()
         ListSensor[i]->y0 = ListSensorDeltaTemp[i] * cos(ListSensorArg[i]);
         ListSensorStt.push_back(false);
 
-        if(lst.value(0) == lst.value(6))
-            ui->webView->page()->mainFrame()->evaluateJavaScript(QString("setYellowMarker( %1 )").arg(i));
 
 
-        QString vector = lst.value(1) + "," + lst.value(2);
-        vector += "," + vector;
-        //qDebug() << vector;
-        ui->webView->page()->mainFrame()->evaluateJavaScript(QString("addTempVector(%1)").arg(vector));
-        ui->webView->page()->mainFrame()->evaluateJavaScript(QString("clearArrow( %1 )").arg(i));
 
 
         //qDebug() << "Sensor " << lst.value(0) << ", Argument: " << ListSensorArg[i]*180/M_PI;
@@ -418,9 +400,6 @@ void MainWindow::updateListSensor()
     readfile x;
     qDebug() << "Update List Sensor";
     //qDebug() << "Time Appear Predict: " << tPredict(movDetectTime.value("08"), movDetectTime.value("05"), d1, d2);
-    ui->webView->page()->mainFrame()->evaluateJavaScript("removeAllMarkers()");
-    ui->webView->page()->mainFrame()->evaluateJavaScript("clearAllMarkers()");
-    ui->webView->page()->mainFrame()->evaluateJavaScript("removeAllArrows()");
     FileData file(x.DATA_PATH);
     FileData data(x.HISTORY_FILE);
     int N = file.length();
@@ -460,37 +439,14 @@ void MainWindow::updateListSensor()
             for(int r=0; r<3; r++){
                 str += ","+lTime3.value(r);
             }
-            ui->webView->page()->mainFrame()->evaluateJavaScript(QString("addTrackingMarker( %1 )").arg(str));
-            ui->webView->page()->mainFrame()->evaluateJavaScript(QString("setOrangeMarker( %1 )").arg(i));
             //qDebug() << "Tracking Marker" << str;
         }else
-            addMarker(str);
-//        if (ListSensorStt[i] && (i!=8)){
-//            ui->webView->page()->mainFrame()->evaluateJavaScript(QString("setGreenMarker(%1)").arg(QString::number(i)));
-//        }
-            if(lst.value(0) == lst.value(6)){
-                if(ListSensorStt[i])
-                    ui->webView->page()->mainFrame()->evaluateJavaScript(QString("setPinkMarker( %1 )").arg(i));
-                else
-                    ui->webView->page()->mainFrame()->evaluateJavaScript(QString("setYellowMarker( %1 )").arg(i));
-            }
-            else if(ListSensorStt[i])
-                ui->webView->page()->mainFrame()->evaluateJavaScript(QString("setGreenMarker( %1 )").arg(i));
+//            addMarker(str);
+
         ListSensorDeltaTemp[i] = ListSensorTemp[i] - ListSensorTemp[getIndexMarker(lst.value(6).toInt())];
         ListSensor[i]->x0 = ListSensorDeltaTemp[i] * sin(ListSensorArg[i]);
         ListSensor[i]->y0 = ListSensorDeltaTemp[i] * cos(ListSensorArg[i]);
         //qDebug() << i << ListSensorDeltaTemp[i] << ListSensor[i]->x0 << ListSensor[i]->y0;
-
-        QString lat_test, lng_test;
-        QString vector = lst.value(1) + "," + lst.value(2);
-        double dis = ListSensorDeltaTemp[i] * 20;
-        findLastPoint(lat_test, lng_test, lst.value(1).toDouble(), lst.value(2).toDouble(), dis, ListSensorArg[i]);
-        vector += "," + lat_test + "," + lng_test;
-        //qDebug() << vector;
-        ui->webView->page()->mainFrame()->evaluateJavaScript(QString("addTempVector(%1)").arg(vector));
-        if((lst.value(0) == lst.value(6)) || (ListSensor[i]->cur_temp == 0))
-        //if(lst.value(0) == lst.value(6))
-            ui->webView->page()->mainFrame()->evaluateJavaScript(QString("clearArrow(%1)").arg(i));
     }
    // ClearMap();
 }
@@ -736,17 +692,7 @@ void MainWindow::onOpenCloseButtonClicked()
 
 void MainWindow::onGpsData(QString data)
 {
-    if(gpsDataReceived) {
-        ui->lblMyPlace->setText(data);
-        ui->webView->page()->mainFrame()->evaluateJavaScript(QString("moveMyMarker(%1)").arg(data));
-    } else {
-        ui->lblMyPlace->setText(data);
-        ui->webView->page()->mainFrame()->evaluateJavaScript(QString("addMyMarker(%1)").arg(data));
-        gpsDataReceived = true;
-    }
-        ui->lblMyPlace->setText(data);
-        ui->webView->page()->mainFrame()->evaluateJavaScript(QString("moveMyMarker(%1)").arg(data));
-    onOptimizeMove();
+
 }
 
 void MainWindow::onNodeJoin(int mac, QString address)
@@ -780,12 +726,7 @@ void MainWindow::onNodeJoin(int mac, QString address)
 //            qDebug() << "joinedAddress[" + QString::number(indexJoined) + "]: "  + address;
 //            indexJoined++;
 //            qDebug() << "indexJoined = " << indexJoined << endl;
-            QString line = file.readLine(index+1);
-            QStringList lst = line.split(",");
-            if(lst.value(0) != lst.value(6))
-                ui->webView->page()->mainFrame()->evaluateJavaScript(QString("setGreenMarker(%1)").arg(QString::number(index)));
-            else
-                ui->webView->page()->mainFrame()->evaluateJavaScript(QString("setPinkMarker(%1)").arg(QString::number(index)));
+
         }
     //}
 }
@@ -823,66 +764,7 @@ int MainWindow::getIndexMarker(int mac)
     return -1;
 }
 
-//Map
-void MainWindow::addMarker(QString place)
-{
-    ui->webView->page()->mainFrame()->evaluateJavaScript(QString("addMarker( %1 )").arg(place));
-}
 
-void MainWindow::ClearMap()
-{
-    ui->webView->page()->mainFrame()->evaluateJavaScript("clearAllMarkers()");
-}
-
-void MainWindow::removeAllMarkers()
-{
-    ui->webView->page()->mainFrame()->evaluateJavaScript("removeAllMarkers()");
-}
-
-void MainWindow::zoomMap(QString zm)
-{
-    ui->webView->page()->mainFrame()->evaluateJavaScript(QString("zoom( %1 )").arg(zm));
-}
-
-void MainWindow::gotoPlaceByCoordinate(QString place)
-{
-    QString str =
-            QString("var newLoc = new google.maps.LatLng(%1); ").arg(place) +
-            QString("map.setCenter(newLoc);");
-    ui->webView->page()->mainFrame()->evaluateJavaScript(str);
-}
-
-void MainWindow::ShowAllSensor(bool ok)
-{
-    if(ok)
-    {
-        if(ui->cbxJoinedSensor->isChecked()) ui->cbxJoinedSensor->setChecked(false);
-        ui->webView->page()->mainFrame()->evaluateJavaScript("showAllMarkers()");
-    } else {
-        ClearMap();
-    }
-}
-
-void MainWindow::ShowJoinedSensor(bool ok)
-{
-    if(ok)
-    {
-        if(ui->cbxAllSensor->isChecked()) ui->cbxAllSensor->setChecked(false);
-        ClearMap();
-        int N = ListSensor.length();
-        for(int i = 0; i < N; i++)
-        {
-            if(ListSensor[i]->isJoin) showMarker(ListSensor[i]->markerIndex);
-        }
-    } else {
-        ClearMap();
-    }
-}
-
-void MainWindow::showMarker(int index)
-{
-    ui->webView->page()->mainFrame()->evaluateJavaScript(QString("showMarker(%1)").arg(QString::number(index)));
-}
 
 //Tranceiver
 void MainWindow::onTranceiverData(QString data)
@@ -1090,6 +972,7 @@ void MainWindow::RetaskAll()
     }
 }
 
+
 void MainWindow::AddNewSensor()
 {
     NewSensorDialog dialog(this);
@@ -1097,7 +980,7 @@ void MainWindow::AddNewSensor()
     dialog.setFixedSize(dialog.size());
     if(dialog.exec() == QDialog::Accepted)
     {
-        removeAllMarkers();
+//        removeAllMarkers();
         ListSensor.clear();
         initListSensor();
     }
@@ -1136,8 +1019,8 @@ void MainWindow::StartupLocation()
         QString place = lat + ", " + lng;
         if(place.isEmpty()) place = "20.333413, 105.597677";
         if(zm.isEmpty()) zm = "8";
-        gotoPlaceByCoordinate(place);
-        zoomMap(zm);
+//        gotoPlaceByCoordinate(place);
+//        zoomMap(zm);
     }
 }
 
@@ -1207,12 +1090,6 @@ void MainWindow::on_btnView_clicked()
     }
 }
 
-void MainWindow::on_pushButton_2_clicked()
-{
-    if(ui->cbxAllSensor->isChecked()) ui->cbxAllSensor->setChecked(false);
-    if(ui->cbxJoinedSensor->isChecked()) ui->cbxJoinedSensor->setChecked(false);
-    ClearMap();
-}
 
 void MainWindow::on_pushButton_clicked()
 {
@@ -1361,10 +1238,7 @@ QString MainWindow::findNearestNode(){
     return mac;
 }
 
-void MainWindow::on_btnUpdate_clicked()
-{
-    updateListSensor();
-}
+
 
 void MainWindow::delay(int secondsToWait){
     QTime dieTime = QTime::currentTime().addSecs(secondsToWait);
@@ -1574,8 +1448,7 @@ void MainWindow::onOptimizeMove()
     }
     qDebug() << fabs(m);
     vector += "," + des_lat + "," + des_lng;
-    ui->webView->page()->mainFrame()->evaluateJavaScript(QString("removeDirArrows()"));
-    ui->webView->page()->mainFrame()->evaluateJavaScript(QString("addDirectionArrow(%1)").arg(vector));
+
 }
 
 double MainWindow::bearing(double lat1, double lng1, double lat2, double lng2){
@@ -1604,51 +1477,6 @@ void MainWindow::findLastPoint(QString &lat2, QString &lng2, double lat1, double
     lng2 = QString::number(m_lng,'f',6);
 }
 
-void MainWindow::on_btngetNearestNode_clicked()
-{
-    readfile x;
-    FileData file(x.DATA_PATH);
-    int N = file.length();
-    double *dis = new double[N];
-    for(int i=0; i<N; i++){
-        QString line = file.readLine(i+1);
-        QStringList lst = line.split(",");
-        double Nodelat = QString (lst.value(1)).toDouble();
-        double Nodelng = QString (lst.value(2)).toDouble();
-        dis[i] = distance(DATA::lat.toDouble(), DATA::lng.toDouble(), Nodelat, Nodelng);
-//            dis[i] = distance(21.005565,105.842328, Nodelat, Nodelng);
-    }
-    int index = 0;
-    for(int j=0; j<N; j++){
-        QString line = file.readLine(j+1);
-        QStringList lst = line.split(",");
-        if(lst.value(4).toInt() && ListSensorStt[j]){
-            index = j;
-            break;
-        }
-    }
-    for(int k=index; k<N; k++){
-        QString line = file.readLine(k+1);
-        QStringList lst = line.split(",");
-        if(lst.value(4).toInt()){
-            if(dis[k] < dis[index])
-                index = k;
-        }
-        else
-            continue;
-    }
-    QString line_result = file.readLine(index+1);
-    QStringList lst_result = line_result.split(",");
-    if(index==0){
-        if(ListSensorStt[0])
-            console->insertPlainText("Node gan nhat co dia chi mac " + lst_result.value(0));
-        else
-            console->insertPlainText("Chua co nut chup anh nao gia nhap mang!\n");
-    }
-    else
-        console->insertPlainText("Node gan nhat co dia chi mac " + lst_result.value(0));
-    delete dis;
-}
 
 void MainWindow::mySendCommand(int mac, int cmd)
 {
@@ -1656,90 +1484,13 @@ void MainWindow::mySendCommand(int mac, int cmd)
 }
 
 void MainWindow::makePlot(){
-    readfile x;
-    ui->Plot->clearPlottables();
-    ui->Plot->replot();
-    ui->Plot_hum->clearPlottables();
-    ui->Plot_hum->clearPlottables();
-    QStringList temp,hump,h,m;
-    QList<double> t;
-    QString date = ui->dateEdit->text();
-    FileData data(x.HISTORY_FILE);
-    int M = data.length();
-    qDebug()<<M;
-    for(int i=1;i<M+1;i++)
-        {
-            QString data_line = data.readLine(i);
-            QStringList data_lst = data_line.split(":");
-            if((data_lst.value(2) == ui->nodeBox->currentText())&&(data_lst.value(0)==date))
-            {
-                temp<<data_lst.value(3);
-                hump<<data_lst.value(4);
-                QStringList time = data_lst.value(1).split("_");
-                h<<time.value(0); m<<time.value(1);
-            }
-        }
-    qDebug()<<temp;
-    qDebug()<<hump;
-    ui->Plot->addGraph(ui->Plot->xAxis,ui->Plot->yAxis);
-    ui->Plot->graph(0)->setLineStyle(QCPGraph::lsLine);
-    ui->Plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
-    ui->Plot->graph(0)->setPen((QPen(QColor(255,0,0))));
-
-    ui->Plot_hum->addGraph(ui->Plot_hum->xAxis,ui->Plot_hum->yAxis);
-    ui->Plot_hum->graph(0)->setLineStyle(QCPGraph::lsLine);
-    ui->Plot_hum->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
-    ui->Plot_hum->graph(0)->setPen((QPen(QColor(0,0,255))));
-
-
-    QVector<double> keyData;
-    QVector<double> tempData,humpData;
-
-    int N = temp.length();
-    for(int i=0;i<N;i++)
-        {
-            t.append(h.value(i).toDouble()+(m.value(i).toDouble()/60));
-            keyData <<(t.value(i)); tempData << temp.value(i).toDouble();
-            humpData<<hump.value(i).toDouble();
-        }
-    ui->Plot->graph(0)->setData(keyData, tempData);
-    ui->Plot_hum->graph(0)->setData(keyData, humpData);
-
-    qSort(t.begin(), t.end());
-    qSort(temp.begin(),temp.end());
-    qSort(hump.begin(),hump.end());
-
-    double min = t.first();
-    double max = t.last();
-    double temp_max = temp.last().toDouble();
-    double hump_max = hump.last().toDouble();
-    double temp_min = temp.first().toDouble();
-    double hump_min = hump.first().toDouble();
-
-    qDebug()<<min<<max;
-
-    ui->Plot->xAxis->setLabel("Time(h)");
-    ui->Plot->yAxis->setLabel("Temperature(oC)");
-    ui->Plot_hum->xAxis->setLabel("Time(h)");
-    ui->Plot_hum->yAxis->setLabel("Humidity(%)");
-
-    ui->Plot->xAxis->setRange(min-0.1,max+0.1);
-    ui->Plot->yAxis->setRange(temp_min-2,temp_max+2);
-    //ui->Plot->rescaleAxes();
-    ui->Plot->replot();
-
-    ui->Plot_hum->xAxis->setRange(min-0.1,max+0.1);
-    ui->Plot_hum->yAxis->setRange(hump_min-2,hump_max+2);
-    //ui->Plot_hum->rescaleAxes();
-    ui->Plot_hum->replot();
 
 
 }
 
 void MainWindow::setDate()
 {
-    QDate date;
-    ui->dateEdit->setDate(date.currentDate());
+
 }
 
 void MainWindow::sendBroadcast()
@@ -1752,4 +1503,17 @@ void MainWindow::sendBroadcast()
         tranceiver->writeData(cmd);
         console->insertPlainText("Gui ma lenh: "+cmd+"\n");
 
+}
+
+void MainWindow::on_btnConfigThreshol_clicked()
+{
+    configThreshold dialog(this);
+    dialog.setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    dialog.setFixedSize(dialog.size());
+    if(dialog.exec() == QDialog::Accepted)
+    {
+////        removeAllMarkers();
+//        ListSensor.clear();
+//        initListSensor();
+    }
 }

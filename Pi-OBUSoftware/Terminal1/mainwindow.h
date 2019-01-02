@@ -22,6 +22,7 @@
 #include "Dialog/setupserialportdialog.h"
 #include "Dialog/aboutdialog.h"
 #include "Dialog/serverdialog.h"
+#include "Dialog/configthreshold.h"
 #include "receivefromweb.h"
 #include <QNetworkAccessManager>
 #include "QHash"
@@ -71,16 +72,16 @@ signals:
 
 private slots:
     //void on_webView_loadFinished(bool );
-    void on_btngetNearestNode_clicked();
+//    void on_btngetNearestNode_clicked();
     void onOptimizeMove();
     void on_btnPrint_clicked();
-    void on_btnUpdate_clicked();
+   // void on_btnUpdate_clicked();
     void on_btnClear_clicked();
     void Send_Broadcast();
     void autoTakePhoto(QString);
 
     void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
+//     on_pushButton_2_clicked();
     Q_INVOKABLE void sendCommand(int, int);
     void onOpenCloseButtonClicked();
     void onGpsData(QString);
@@ -89,14 +90,14 @@ private slots:
     void onNodeJoin(int, QString);
     void onImageReceived(QString);
     //Map
-    void addMarker(QString);
-    void removeAllMarkers();
-    void ClearMap();
-    void ShowAllSensor(bool);
-    void ShowJoinedSensor(bool);
-    void zoomMap(QString);
-    void gotoPlaceByCoordinate(QString);
-    void populateJavaScriptWindowObject();
+//    void addMarker(QString);
+//    void removeAllMarkers();
+//    void ClearMap();
+//    void ShowAllSensor(bool);
+//    void ShowJoinedSensor(bool);
+//    void zoomMap(QString);
+//    void gotoPlaceByCoordinate(QString);
+//    void populateJavaScriptWindowObject();
     //Tranceiver
     void onTranceiverData(QString);
     void onTempAndHum(QString);
@@ -138,6 +139,8 @@ private slots:
     //void on_pushButton_pressed();
 
     //void on_pushButton_clicked(bool checked);
+
+    void on_btnConfigThreshol_clicked();
 
 private:
     Ui::MainWindow *ui;

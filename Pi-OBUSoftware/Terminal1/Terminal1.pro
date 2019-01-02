@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     qcustomplot.cpp \
     readfile.cpp \
     confmqtt.cpp \
-    define.cpp
+    define.cpp \
+    Dialog/configthreshold.cpp
 HEADERS += mainwindow.h \
     hled.h \
     console.h \
@@ -56,7 +57,8 @@ HEADERS += mainwindow.h \
     qcustomplot.h \
     qtmosq.h \
     readfile.h \
-    confmqtt.h
+    confmqtt.h \
+    Dialog/configthreshold.h
 FORMS += mainwindow.ui \
     Dialog/retasksensordialog.ui \
     Dialog/retskalldialog.ui \
@@ -66,7 +68,8 @@ FORMS += mainwindow.ui \
     Dialog/startuplocationdialog.ui \
     Dialog/setupserialportdialog.ui \
     Dialog/aboutdialog.ui \
-    Dialog/serverdialog.ui
+    Dialog/serverdialog.ui \
+    Dialog/configthreshold.ui
 include(qextserialport/qextserialport.pri)
 LIBS += -lmosquittopp
 LIBS += -lmosquitto
