@@ -34,7 +34,8 @@ SOURCES += main.cpp \
     readfile.cpp \
     confmqtt.cpp \
     define.cpp \
-    Dialog/configthreshold.cpp
+    Dialog/configthreshold.cpp \
+    tranceiverlora.cpp
 HEADERS += mainwindow.h \
     hled.h \
     console.h \
@@ -58,7 +59,8 @@ HEADERS += mainwindow.h \
     qtmosq.h \
     readfile.h \
     confmqtt.h \
-    Dialog/configthreshold.h
+    Dialog/configthreshold.h \
+    tranceiverlora.h
 FORMS += mainwindow.ui \
     Dialog/retasksensordialog.ui \
     Dialog/retskalldialog.ui \

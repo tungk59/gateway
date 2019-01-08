@@ -99,6 +99,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(tranceiver, SIGNAL(completeLux(QString)), SLOT(oncompleteLux(QString)));
     connect(tranceiver,SIGNAL(sendLux(int,double)),SLOT(sendMqttLux(int,double)));
 
+    //Lora
+    lora = new tranceiverlora();
+    loraStarted =false;
+    thread_lora =new QThread();
+    lora->moveToThread(thread_lora);
+    connect(lora, SIGNAL(workRequestedLR()), thread_lora, SLOT(start()));
+    connect(thread_lora,SIGNAL(started()),lora,SLOT(doWorkLR()));
+    connect(lora, SIGNAL(receivedDataLR(QString)), SLOT(onTranceiverData(QString)));
+
+
 
 
 
@@ -124,7 +134,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //nxt cmt
     connect(ui->bt_Broadcast, SIGNAL(clicked()), SLOT(sendtoWeb()));
 
-    connect(ui->btnShowVector, SIGNAL(clicked()), this, SLOT(onOptimizeMove()));
+    connect(ui->btnSendLora, SIGNAL(clicked()), this, SLOT(onCommandLR()));
 
     setWindowTitle(tr("Amsterdam Team "));
 
@@ -139,8 +149,9 @@ MainWindow::MainWindow(QWidget *parent) :
      */
 
    // int time_out = 30000;
-    fileName = "/home/lab411/Desktop/LogfileUAV/logfile_" + QDate::currentDate().toString() + "_" + QTime::currentTime().toString();
+    //fileName = "/home/lab411/Desktop/LogfileUAV/logfile_" + QDate::currentDate().toString() + "_" + QTime::currentTime().toString();
     AlwaysOpenPort();
+    AlwaysOpenPortLR();
     SetupPortSerial();
 
 //    </Chinh sua code cho UAV>
@@ -620,7 +631,7 @@ void MainWindow::sendCommand(int mac, int cmd)
     }
 
     if(Cmd.length() > 4) {
-        qDebug()<<"vao duoc roi"<<endl;
+       // qDebug()<<"vao duoc roi"<<endl;
         tranceiver->writeData(Cmd);
         QString tmp = "Gui ma lenh " + Cmd + "\n";
         console->insertPlainText(tmp);
@@ -658,6 +669,32 @@ void MainWindow::AlwaysOpenPort()
         led->turnOn();
         console->insertPlainText("\n-------------- Port Data Opened -------------\n");
         tranceiverStarted = true;
+    }
+}
+void MainWindow::AlwaysOpenPortLR()
+{
+    readfile x;
+    if(loraStarted)
+    {
+        if(lora->port->isOpen()){
+            lora->port->close();
+            console->insertPlainText("\n-------------- Lora Closed -------------\n");
+        } else {
+            if(lora->port->portName().isEmpty()) lora->port->setPortName(x.LORA_PORT_DEFAULT);
+            QSettings settings(m_organizationName, m_appName);
+            QString tmp = settings.value("TranceiverBaudrate").toString();
+            if(tmp.isEmpty()) lora->port->setBaudRate((BaudRateType)x.LORA_BAUDRATE_DEFAULT);
+            lora->port->open(QIODevice::ReadWrite);
+//            led->turnOn();
+//            ui->btnOpenClose->setText("Close");
+            console->insertPlainText("\n------------- Port Lora Data Opened ------------\n");
+        }
+    } else {
+        lora->requestWorkLR();
+        //ui->btnOpenClose->setText("Close");
+        //led->turnOn();
+        console->insertPlainText("\n-------------- Port Lora Data Opened -------------\n");
+        loraStarted = true;
     }
 }
 
@@ -1166,6 +1203,13 @@ void MainWindow::on_btnClear_clicked()
     console->clear();
 }
 
+void MainWindow::onCommandLR(){
+    QString Cmd="0c0$";
+    lora->writeData(Cmd);
+    QString tmp = "Gui ma lenh " + Cmd + "\n";
+    console->insertPlainText(tmp);
+}
+
 void MainWindow::sendImageToWeb(QString imax,QString mac){
     QString str;
     QByteArray im;
@@ -1409,47 +1453,7 @@ void MainWindow::on_btnPrint_clicked()
     console->document()->print(&printer);
 }
 
-void MainWindow::onOptimizeMove()
-{
-    readfile x;
-    FileData sensor(x.DATA_PATH);
-    double p=0, q=0, r, m=0, u, v, arg;
-    for(int i=0; i<sensor.length(); i++){
-        if(ListSensor[i]->cur_temp != 0){
-            p += ListSensor[i]->x0;
-            q += ListSensor[i]->y0;
-        }
-    }
-    qDebug() << p << q;
-    r = sqrt(p*p + q*q);
-    u = p/r;
-    v = q/r;
-    for(int i=0; i<sensor.length(); i++){
-        if(ListSensor[i]->cur_temp)
-            m += ListSensor[i]->x0 * u + ListSensor[i]->y0 * v;
-    }
-    if(m<0){
-        u = -u;
-        v = -v;
-    }
-    //qDebug() << u << " *** " << v;
-    arg = M_PI/2 - atan2(v,u);
-    //qDebug() << atan2(v,u) << arg;
-    QString des_lat, des_lng;
-    QString vector;
-    if(!DATA::lat.isEmpty() && !DATA::lng.isEmpty()){
-        vector = DATA::lat + "," + DATA::lng;
-        //qDebug() << DATA::lat + "," + DATA::lng;
-        findLastPoint(des_lat, des_lng, DATA::lat.toDouble(), DATA::lng.toDouble(), fabs(m)*20, arg);
-    }
-    else{
-        vector = "21.005739,105.842308";
-        findLastPoint(des_lat, des_lng, 21.005739,105.842308, fabs(m)*20, arg);
-    }
-    qDebug() << fabs(m);
-    vector += "," + des_lat + "," + des_lng;
 
-}
 
 double MainWindow::bearing(double lat1, double lng1, double lat2, double lng2){
     double a = cos(deg2rad(lat2)) * sin(deg2rad(lng2 -lng1));

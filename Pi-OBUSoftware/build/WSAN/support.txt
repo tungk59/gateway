@@ -8,4 +8,6 @@ ttyUSB0
 19200
 ttyUSB1
 9600
+ttyS0
+9600
 	

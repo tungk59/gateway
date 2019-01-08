@@ -13,6 +13,7 @@
 #include "sensor.h"
 #include "define.h"
 #include "tranceiver.h"
+#include "tranceiverlora.h"
 #include "Dialog/editsensorplacedialog.h"
 #include "Dialog/newsensordialog.h"
 #include "Dialog/retasksensordialog.h"
@@ -67,13 +68,14 @@ private:
     //for UAV
     void SetupPortSerial();
     void AlwaysOpenPort();
+    void AlwaysOpenPortLR();
 signals:
     void readySend();
 
 private slots:
     //void on_webView_loadFinished(bool );
 //    void on_btngetNearestNode_clicked();
-    void onOptimizeMove();
+    void onCommandLR();
     void on_btnPrint_clicked();
    // void on_btnUpdate_clicked();
     void on_btnClear_clicked();
@@ -146,16 +148,17 @@ private:
     Ui::MainWindow *ui;
     Console *console;
     GPS *gps;
-    QThread *thread_gps, *thread_tranceiver, *thread_receivefromweb;
+    QThread *thread_gps, *thread_tranceiver, *thread_receivefromweb,*thread_lora;
     HLed *led;
     QString m_organizationName, m_appName;
-    bool gpsStarted, tranceiverStarted, gpsDataReceived, sended, detectedFlag, receivedFlag;
+    bool gpsStarted, tranceiverStarted, gpsDataReceived, sended, detectedFlag, receivedFlag, loraStarted;
     QList<Sensor*> ListSensor;
     QList<bool> ListSensorStt;
     QList<double> ListSensorArg;
     QList<double> ListSensorTemp;
     QList<double> ListSensorDeltaTemp;
     Tranceiver *tranceiver;
+    tranceiverlora * lora;
     receivefromweb *web;
     QNetworkAccessManager *http1;
     int *joinedMac;

@@ -1,6 +1,5 @@
-#ifndef TRANCEIVER_H
-#define TRANCEIVER_H
-
+#ifndef TRANCEIVERLORA_H
+#define TRANCEIVERLORA_H
 #include <QObject>
 #include <QTimer>
 #include "qextserialenumerator.h"
@@ -9,19 +8,22 @@
 #include "define.h"
 #include "receivefromweb.h"
 #include <QStringList>
+#include <QDebug>
+#include "data.h"
+#include "QDir"
+#include <QTime>
 
 
-class Tranceiver : public QObject
-{
-Q_OBJECT
+class tranceiverlora : public QObject
+{ Q_OBJECT
 public:
-    explicit Tranceiver(QObject *parent = 0);
-    void requestWork();
+   explicit tranceiverlora(QObject *parent = 0);
+    void requestWorkLR();
     void writeData(QString);
 
 signals:
-    void receivedData(QString);
-    void workRequested();
+    void receivedDataLR(QString);
+    void workRequestedLR();
     void ImageReceived(QString);
     void nodeJoin(int, QString);
     void tempAndHum(QString);
@@ -36,8 +38,8 @@ signals:
     //
 
 public slots:
-    void readData();
-    void doWork();
+    void readDataLR();
+    void doWorkLR();
 public:
     QTimer *timer;
     QextSerialPort *port;
@@ -50,8 +52,7 @@ private:
     void delay(int secondsToWait);
     QString getStatus(int);
     QString FileName;
-    QNetworkAccessManager *http2;
 
 };
 
-#endif // TRANCEIVER_H
+#endif // TRANCEIVERLORA_H

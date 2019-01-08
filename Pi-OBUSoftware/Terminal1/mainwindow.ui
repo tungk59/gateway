@@ -300,9 +300,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="btnShowVector">
+        <widget class="QPushButton" name="btnSendLora">
          <property name="text">
-          <string>Show Direction</string>
+          <string>Send Lora</string>
          </property>
         </widget>
        </item>

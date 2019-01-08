@@ -17,6 +17,8 @@ public:
     QString TIME_DETECT;
     QString TRANCEIVER_PORT_DEFAULT;
     int TRANCEIVER_BAUDRATE_DEFAULT;
+    QString LORA_PORT_DEFAULT;
+    int LORA_BAUDRATE_DEFAULT;
     QString GPS_PORT_DEFAULT;
     int GPS_BAUDRATE_DEFAULT;
     define conf;

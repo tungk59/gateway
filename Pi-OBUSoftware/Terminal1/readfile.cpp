@@ -1,4 +1,5 @@
 #include "readfile.h"
+#include "qdebug.h"
 readfile::readfile()
 {
     QFile File1(conf.DATA_SUPPORT);
@@ -14,6 +15,8 @@ readfile::readfile()
     this->TRANCEIVER_BAUDRATE_DEFAULT = in.readLine().toInt();
     this->GPS_PORT_DEFAULT = in.readLine();
     this->GPS_BAUDRATE_DEFAULT = in.readLine().toInt();
+    this->LORA_PORT_DEFAULT = in.readLine();
+    this->LORA_BAUDRATE_DEFAULT = in.readLine().toInt();
 //    this->hostMqtt = in.readLine();
 //    this->portMqtt = in.readLine().toInt();
     File1.close();
