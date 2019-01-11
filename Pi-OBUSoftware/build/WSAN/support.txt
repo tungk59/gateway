@@ -1,0 +1,13 @@
+/home/nghiemdinhhao/Desktop/gateway/Pi-OBUSoftware/build/WSAN/Images/Sensor
+/home/nghiemdinhhao/Desktop/gateway/Pi-OBUSoftware/build/WSAN/dataHN.txt
+/home/nghiemdinhhao/Desktop/gateway/Pi-OBUSoftware/build/WSAN/gps.txt
+/home/nghiemdinhhao/Desktop/gateway/Pi-OBUSoftware/build/WSAN/history.txt
+/home/nghiemdinhhao/Desktop/gateway/Pi-OBUSoftware/build/WSAN/log.txt
+/home/nghiemdinhhao/Desktop/gateway/Pi-OBUSoftware/build/WSAN/timeDetect.txt
+ttyUSB0
+19200
+ttyUSB1
+9600
+ttyS0
+9600
+/home/nghiemdinhhao/Desktop/gateway/Pi-OBUSoftware/build/WSAN/thresol.txt	
