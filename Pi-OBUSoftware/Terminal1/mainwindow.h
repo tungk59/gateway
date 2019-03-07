@@ -143,6 +143,9 @@ private slots:
     //void on_pushButton_clicked(bool checked);
 
     void on_btnConfigThreshol_clicked();
+    void subscribePressed();
+    void subscribed();
+    void getSubMQTT(QString);
 
 private:
     Ui::MainWindow *ui;

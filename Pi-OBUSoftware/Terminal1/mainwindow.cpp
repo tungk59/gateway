@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
     web->moveToThread(thread_receivefromweb);
     thread_receivefromweb->start();
     connect(thread_receivefromweb,SIGNAL(started()),web,SLOT(doWork_web()));
-    connect(web, SIGNAL(Workrequest(QString)), this ,SLOT(GetDataWeb()));
+    //connect(web, SIGNAL(Workrequest(QString)), this ,SLOT(GetDataWeb()));
     qDebug()<< "thread start";
     //nxt cmt
     //connect(this,SIGNAL(readySend()),SLOT(sendtoWeb()));
@@ -107,9 +107,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(lora, SIGNAL(workRequestedLR()), thread_lora, SLOT(start()));
     connect(thread_lora,SIGNAL(started()),lora,SLOT(doWorkLR()));
     connect(lora, SIGNAL(receivedDataLR(QString)), SLOT(onTranceiverData(QString)));
-
-
-
 
 
     initMap(true);
@@ -156,7 +153,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //    </Chinh sua code cho UAV>
     lib_init();
+    //NXT
     mqttConnect();
+    subscribePressed();
     qDebug()<<"okoko";
 }
 
@@ -219,14 +218,17 @@ void MainWindow::mqttConnect(){
 //    qDebug()<<x.topic1;
     mosq->username_pw_set(access);
 
+//NXT
     connect (mosq, SIGNAL(connected()), this, SLOT(connectEnabled()));
+    connect (mosq, SIGNAL(subscribed()), this ,SLOT(subscribed()));
+    connect (mosq, SIGNAL(messageReceived(QString)), this, SLOT(getSubMQTT(QString)));
     mosq->connect_async(s,xx.portMqtt);
     mosq->loop_start();
     //qDebug() <<s;
     //qDebug()<<"end";
 }
 void MainWindow::connectEnabled(){
-    console->insertPlainText("khoi tao mqtt thanh cong!!");
+    console->insertPlainText("khoi tao mqtt thanh cong!!\n");
 }
 void MainWindow::sendMqtt(){
 //    confmqtt x;
@@ -240,6 +242,52 @@ void MainWindow::sendMqtt(){
     mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
     console->insertPlainText("vua gui du lieu server!!");
 }
+
+//NXT
+// THEM CAC DONG SAU VAO CODE
+// THEM KHAI BAO HAM TRONG FILE mainwindow.h
+void MainWindow::subscribePressed()
+{
+    //setMessageStatus(false);
+    QString topicSub="v1/devices/me/rpc/request/+";
+    QByteArray topic = topicSub.toLocal8Bit();
+
+    mosq->subscribe(mosq->getMID(), topic.data(), 2);
+}
+
+void MainWindow::subscribed()
+{
+    console->insertPlainText("sub thanh cong!!\n");
+
+}
+void MainWindow::getSubMQTT(QString mess){
+    QStringList cmd=mess.split('"');
+    if(cmd[3]=="PUMP")
+    {
+        if(cmd[6].mid(1,cmd[6].size()-2)=="true") {
+            console->insertPlainText("bat bom\n");//thay chu hien thi ra man hinh
+            //viet them code dieu khien bom qua lora
+
+        }
+        else {
+            console->insertPlainText("tat bom\n");//thay chu hien thi ra man hinh
+            //viet them code dieu khien bom qua lora
+        }
+    }else
+    if(cmd[3]=="LIGHT")
+    {
+        if(cmd[6].mid(1,cmd[6].size()-2)=="true") console->insertPlainText("bat den\n");//thay chu hien thi ra man hinh
+        //viet them code dieu khien bom qua lora
+        else {
+            console->insertPlainText("tat den\n");//thay chu hien thi ra man hinh
+            //viet them code dieu khien bom qua lora
+        }
+    }
+}
+
+
+//ket thuc them
+
 
 void MainWindow::sendMqttTandH(int mac,double temp,double humi)
 {
