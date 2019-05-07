@@ -120,10 +120,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionSerial_Port, SIGNAL(triggered()), SLOT(SetupSerialPort()));
     connect(ui->actionServer, SIGNAL(triggered()), SLOT(SendToServer()));
 
-
-
-
-
     connect(ui->bt_Broadcast, SIGNAL(clicked()), SLOT(sendBroadcast()));
     //nxt cmt
     connect(ui->bt_Broadcast, SIGNAL(clicked()), SLOT(sendtoWeb()));
@@ -1933,6 +1929,9 @@ void MainWindow::sendMqttDust(int mac,double dust)
 // Sang loc du lieu cho Nhiet do - do am
 void MainWindow::SendAITH(int mac, double temp, double humi)
 {
+    bool a=database.insertdata(mac,temp,"temperature");
+    if(a)qDebug()<<"123";
+    database.insertdata(mac,humi,"humidity");
     QString stemp = QString::number(temp, 'f', 2);
     QString shumi = QString::number(humi, 'f', 2);
     QString smac;
