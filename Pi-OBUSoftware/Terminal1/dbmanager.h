@@ -14,8 +14,10 @@ class DbManager
 public:
     DbManager();
     QStringList getdata(int node,QString table);
+    QStringList getalldata(QString table);
     bool insertdata(int node, int value, QString table);
     bool deletedata(int node, QString table);
+    bool deletealldata(QString table);
     QDateTime time;
 
 private:

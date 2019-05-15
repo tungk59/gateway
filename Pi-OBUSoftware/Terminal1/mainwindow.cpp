@@ -99,7 +99,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(lora, SIGNAL(receivedDataLR(QString)), SLOT(onreceivedDataLR(QString)));
     //connect(lora, SIGNAL(receivedDataLR(QString)), SLOT(onTranceiverDataLI(QString)));
     connect(lora, SIGNAL(tempAndHum(QString)), SLOT(onTempAndHumLR(QString)));
-    connect(lora, SIGNAL(sendTandH(int,double,double)), SLOT(sendMqttTandHLR(int,double,double)));
+    //connect(lora, SIGNAL(sendTandH(int,double,double)), SLOT(sendMqttTandHLR(int,double,double)));
     connect(lora, SIGNAL(sendMois(int,int)), SLOT(SendAIMois(int,int)));
     connect(lora, SIGNAL(completeMois(QString)), SLOT(oncompleteMois(QString)));
     connect(lora,SIGNAL(nodeJoinLR(int)),SLOT(onNodeJoinLR(int)));
@@ -148,6 +148,7 @@ MainWindow::MainWindow(QWidget *parent) :
     lib_init();
     mqttConnect();
     qDebug()<<"okoko";
+    onWifi();
 }
 // load output.txt
 
@@ -231,124 +232,124 @@ void MainWindow::sendMqtt(){
     mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
     console->insertPlainText("sent data to server!!");
 }
-void MainWindow::sendMqttMois(int mac, int mois)
-{
-    QString model="T1000";
-    QString name="P1-SN-0";
-    name.append(QString::number(mac));
-    //qDebug()<<name;
-    //nxt sua
-    QDateTime current = QDateTime::currentDateTime();
-    uint timestame = current.toTime_t();
-   // qDebug()<<timestame;
-    QString payload = "{\"";
-    payload +=name;
-    payload +="\": [{\"ts\":";
-    payload +=QString::number(timestame);payload+="000,\"values\":";
-    payload += "{\"soil moisture\":"; payload += QString::number(mois); payload +=",";
-    payload += "\"threshold_soil-moisture\":"; payload += QString::number(DATA::mois_t);
-    payload += "}}]}";
-    qDebug()<<payload<<endl;
-    QByteArray datasend=payload.toLocal8Bit();
-    QByteArray topic= xx.topic2.toAscii();
-    mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
-    console->insertPlainText("Sent soil moisture data to the server!!! \r\n");
+//void MainWindow::sendMqttMois(int mac, int mois)
+//{
+//    QString model="T1000";
+//    QString name="P1-SN-0";
+//    name.append(QString::number(mac));
+//    //qDebug()<<name;
+//    //nxt sua
+//    QDateTime current = QDateTime::currentDateTime();
+//    uint timestame = current.toTime_t();
+//   // qDebug()<<timestame;
+//    QString payload = "{\"";
+//    payload +=name;
+//    payload +="\": [{\"ts\":";
+//    payload +=QString::number(timestame);payload+="000,\"values\":";
+//    payload += "{\"soil moisture\":"; payload += QString::number(mois); payload +=",";
+//    payload += "\"threshold_soil-moisture\":"; payload += QString::number(DATA::mois_t);
+//    payload += "}}]}";
+//    qDebug()<<payload<<endl;
+//    QByteArray datasend=payload.toLocal8Bit();
+//    QByteArray topic= xx.topic2.toAscii();
+//    mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
+//    console->insertPlainText("Sent soil moisture data to the server!!! \r\n");
 
-}
-void MainWindow::sendMqttTandHLR(int mac,double temp,double humi)
-{
-//    confmqtt x;
-    QString model="T1000";
-    QString name="P1-SN-0";
-    name.append(QString::number(mac));
-    //qDebug()<<name;
-    //nxt sua
-    QDateTime current = QDateTime::currentDateTime();
-    uint timestame = current.toTime_t();
-   // qDebug()<<timestame;
-    QString payload = "{\"";
-    payload +=name;
-    payload +="\": [{\"ts\":";
-    payload +=QString::number(timestame);payload+="000,\"values\":";
-    payload += "{\"temperature\":"; payload += QString::number(temp); payload += ",";
-    payload += "\"threshold_temperature\":"; payload +=QString::number(DATA::temp_t); payload +=",";
-    payload += "\"humidity\":"; payload += QString::number(humi); payload +=",";
-    payload += "\"threshold_humidity\":"; payload +=QString::number(DATA::hump_t);
-    payload += "}}]}";
+//}
+//void MainWindow::sendMqttTandHLR(int mac,double temp,double humi)
+//{
+////    confmqtt x;
+//    QString model="T1000";
+//    QString name="P1-SN-0";
+//    name.append(QString::number(mac));
+//    //qDebug()<<name;
+//    //nxt sua
+//    QDateTime current = QDateTime::currentDateTime();
+//    uint timestame = current.toTime_t();
+//   // qDebug()<<timestame;
+//    QString payload = "{\"";
+//    payload +=name;
+//    payload +="\": [{\"ts\":";
+//    payload +=QString::number(timestame);payload+="000,\"values\":";
+//    payload += "{\"temperature\":"; payload += QString::number(temp); payload += ",";
+//    payload += "\"threshold_temperature\":"; payload +=QString::number(DATA::temp_t); payload +=",";
+//    payload += "\"humidity\":"; payload += QString::number(humi); payload +=",";
+//    payload += "\"threshold_humidity\":"; payload +=QString::number(DATA::hump_t);
+//    payload += "}}]}";
 
-/*using tb-gateway*/
-//    QString payload="{";
-//        payload += "\"serialNumber\":\""; payload +=name ; payload += "\",";
-//        payload += "\"temperature\":"; payload += QString::number(temp); payload += ",";
-//        payload += "\"humidity\":"; payload += QString::number(humi); payload += ",";
-//        payload += "\"model\":\""; payload += model;
-//    payload+="\"}";
+///*using tb-gateway*/
+////    QString payload="{";
+////        payload += "\"serialNumber\":\""; payload +=name ; payload += "\",";
+////        payload += "\"temperature\":"; payload += QString::number(temp); payload += ",";
+////        payload += "\"humidity\":"; payload += QString::number(humi); payload += ",";
+////        payload += "\"model\":\""; payload += model;
+////    payload+="\"}";
 
-    qDebug()<<payload<<endl;
-    QByteArray datasend=payload.toLocal8Bit();
-    QByteArray topic= xx.topic2.toAscii();
-    mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
-    console->insertPlainText("vua gui du lieu nhiet do - do am len server!!! \r\n");
-}
-void MainWindow::sendMqttTandH(int mac,double temp,double humi)
-{
-//    confmqtt x;
-    QString model="T1000";
-    QString name="P1-SN-0";
-    name.append(QString::number(mac));
-    //qDebug()<<name;
-    //nxt sua
-    QDateTime current = QDateTime::currentDateTime();
-    uint timestame = current.toTime_t();
-   // qDebug()<<timestame;
-    QString payload = "{\"";
-    payload +=name;
-    payload +="\": [{\"ts\":";
-    payload +=QString::number(timestame);payload+="000,\"values\":";
-    payload += "{\"temperature\":"; payload += QString::number(temp); payload += ",";
-    payload += "\"threshold_temperature\":"; payload +=QString::number(DATA::temp_t); payload +=",";
-    payload += "\"humidity\":"; payload += QString::number(humi); payload +=",";
-    payload += "\"threshold_humidity\":"; payload +=QString::number(DATA::hump_t);
-    payload += "}}]}";
+//    qDebug()<<payload<<endl;
+//    QByteArray datasend=payload.toLocal8Bit();
+//    QByteArray topic= xx.topic2.toAscii();
+//    mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
+//    console->insertPlainText("vua gui du lieu nhiet do - do am len server!!! \r\n");
+//}
+//void MainWindow::sendMqttTandH(int mac,double temp,double humi)
+//{
+////    confmqtt x;
+//    QString model="T1000";
+//    QString name="P1-SN-0";
+//    name.append(QString::number(mac));
+//    //qDebug()<<name;
+//    //nxt sua
+//    QDateTime current = QDateTime::currentDateTime();
+//    uint timestame = current.toTime_t();
+//   // qDebug()<<timestame;
+//    QString payload = "{\"";
+//    payload +=name;
+//    payload +="\": [{\"ts\":";
+//    payload +=QString::number(timestame);payload+="000,\"values\":";
+//    payload += "{\"temperature\":"; payload += QString::number(temp); payload += ",";
+//    payload += "\"threshold_temperature\":"; payload +=QString::number(DATA::temp_t); payload +=",";
+//    payload += "\"humidity\":"; payload += QString::number(humi); payload +=",";
+//    payload += "\"threshold_humidity\":"; payload +=QString::number(DATA::hump_t);
+//    payload += "}}]}";
 
-/*using tb-gateway*/
-//    QString payload="{";
-//        payload += "\"serialNumber\":\""; payload +=name ; payload += "\",";
-//        payload += "\"temperature\":"; payload += QString::number(temp); payload += ",";
-//        payload += "\"humidity\":"; payload += QString::number(humi); payload += ",";
-//        payload += "\"model\":\""; payload += model;
-//    payload+="\"}";
+///*using tb-gateway*/
+////    QString payload="{";
+////        payload += "\"serialNumber\":\""; payload +=name ; payload += "\",";
+////        payload += "\"temperature\":"; payload += QString::number(temp); payload += ",";
+////        payload += "\"humidity\":"; payload += QString::number(humi); payload += ",";
+////        payload += "\"model\":\""; payload += model;
+////    payload+="\"}";
 
-    qDebug()<<payload<<endl;
-    QByteArray datasend=payload.toLocal8Bit();
-    QByteArray topic= xx.topic2.toAscii();
-    mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
-    console->insertPlainText("Sent temperature-humidity data to the server!!! \r\n");
-}
-void MainWindow::sendMqttLux(int mac,double lux)
-{
-//    confmqtt x;
-    QString model="T1000";
-    QString name="P1-SN-0";
-    name.append(QString::number(mac));
-    //qDebug()<<name;
-    //nxt sua
-    QDateTime current = QDateTime::currentDateTime();
-    uint timestame = current.toTime_t();
-   // qDebug()<<timestame;
-    QString payload = "{\"";
-    payload +=name;
-    payload +="\": [{\"ts\":";
-    payload +=QString::number(timestame);payload+="000,\"values\":";
-    payload += "{\"luminance\":"; payload += QString::number(lux); payload +=",";
-    payload += "\"threshold_luminance\":"; payload += QString::number(DATA::lux_t);
-    payload += "}}]}";
-    qDebug()<<payload<<endl;
-    QByteArray datasend=payload.toLocal8Bit();
-    QByteArray topic= xx.topic2.toAscii();
-    mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
-    console->insertPlainText("vua gui du lieu anh sang len server!!! \r\n");
-}
+//    qDebug()<<payload<<endl;
+//    QByteArray datasend=payload.toLocal8Bit();
+//    QByteArray topic= xx.topic2.toAscii();
+//    mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
+//    console->insertPlainText("Sent temperature-humidity data to the server!!! \r\n");
+//}
+//void MainWindow::sendMqttLux(int mac,double lux)
+//{
+////    confmqtt x;
+//    QString model="T1000";
+//    QString name="P1-SN-0";
+//    name.append(QString::number(mac));
+//    //qDebug()<<name;
+//    //nxt sua
+//    QDateTime current = QDateTime::currentDateTime();
+//    uint timestame = current.toTime_t();
+//   // qDebug()<<timestame;
+//    QString payload = "{\"";
+//    payload +=name;
+//    payload +="\": [{\"ts\":";
+//    payload +=QString::number(timestame);payload+="000,\"values\":";
+//    payload += "{\"luminance\":"; payload += QString::number(lux); payload +=",";
+//    payload += "\"threshold_luminance\":"; payload += QString::number(DATA::lux_t);
+//    payload += "}}]}";
+//    qDebug()<<payload<<endl;
+//    QByteArray datasend=payload.toLocal8Bit();
+//    QByteArray topic= xx.topic2.toAscii();
+//    mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
+//    console->insertPlainText("vua gui du lieu anh sang len server!!! \r\n");
+//}
 //end code mqtt
 void MainWindow::loadHtmlPage()
 {
@@ -1900,7 +1901,7 @@ void MainWindow::oncompleteDust(QString data)
     receivedFlag = true;
 }
 
-void MainWindow::sendMqttDust(int mac,double dust)
+void MainWindow::sendMqttData(int mac,double data,QString type)
 {
     QString model="T1000";
     QString name="P1-SN-0";
@@ -1914,15 +1915,39 @@ void MainWindow::sendMqttDust(int mac,double dust)
     payload +=name;
     payload +="\": [{\"ts\":";
     payload +=QString::number(timestame);payload+="000,\"values\":";
-    payload += "{\"dust density\":"; payload += QString::number(dust);
+    payload += "{\""+ type+ "\":";
+    payload += QString::number(data);
 //    payload += "\"threshold_soil-moisture\":"; payload += QString::number(DATA::mois_t);
     payload += "}}]}";
     qDebug()<<payload<<endl;
     QByteArray datasend=payload.toLocal8Bit();
     QByteArray topic= xx.topic2.toAscii();
     mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
-    console->insertPlainText("Sent concentration of dust data to the server!!! \r\n");
-
+    console->insertPlainText("Sent data to the server!!! \r\n");
+}
+void MainWindow::sendMqttDataSaved(QString time, int mac,double data,QString type)
+{
+    QString model="T1000";
+    QString name="P1-SN-0";
+    name.append(QString::number(mac));
+    //qDebug()<<name;
+    //nxt sua
+    QDateTime current = QDateTime::currentDateTime();
+    uint timestame = current.toTime_t();
+   // qDebug()<<timestame;
+    QString payload = "{\"";
+    payload +=name;
+    payload +="\": [{\"ts\":";
+    payload +=time;payload+="000,\"values\":";
+    payload += "{\""+ type+ "\":";
+    payload += QString::number(data);
+//    payload += "\"threshold_soil-moisture\":"; payload += QString::number(DATA::mois_t);
+    payload += "}}]}";
+    qDebug()<<payload<<endl;
+    QByteArray datasend=payload.toLocal8Bit();
+    QByteArray topic= xx.topic2.toAscii();
+    mosq->publish(mosq->getMID(),topic.data(),datasend.size(),datasend.data(),2,false);
+    console->insertPlainText("Sent data to the server!!! \r\n");
 }
 
 //
@@ -1961,7 +1986,8 @@ void MainWindow::SendAITH(int mac, double temp, double humi)
                     qDebug()<<read.mid(9,6);
                     if (read.mid(3,5).toDouble()-temp>1 || read.mid(9,6).toDouble()-humi>1 || read.mid(3,5).toDouble()-temp<-1 || read.mid(9,6).toDouble()-humi<-1 ){
                         //Them cac ham gui khi co sau khac nhieu
-                        sendMqttTandH(mac,temp,humi);
+                        sendMqttData(mac,temp,"temparature");//gui nhiet do
+                        sendMqttData(mac,humi,"humidity");// gui do am
                     } else {
                         console->insertPlainText("Stable Temperature - Humidity!!! \r\n");
                     }
@@ -2010,7 +2036,7 @@ void MainWindow::SendAILUX(int mac, double lux)
                     //qDebug()<<read.mid(9,6);
                     if (read.mid(3,5).toDouble()-lux>1 || read.mid(3,5).toDouble()-lux<-1){
                         //Them cac ham gui khi co sau khac nhieu
-                        sendMqttLux(mac,lux);
+                        sendMqttData(mac,lux,"lux");
                     } else {
                         console->insertPlainText("Stable luminance!!! \r\n");
                     }
@@ -2033,6 +2059,7 @@ void MainWindow::SendAILUX(int mac, double lux)
 // Sang lọc du lieu cho do am dat
 void MainWindow::SendAIMois(int mac,int Mois) {
     //QString SMois = QString::number()
+    database.insertdata(mac,Mois,"moisture");
     QString  smac;
     if (mac<10) {
         smac.append(QString::number(mac));
@@ -2058,7 +2085,7 @@ void MainWindow::SendAIMois(int mac,int Mois) {
                     //qDebug()<<read.mid(9,6);
                     if (read.mid(3,5).toDouble()-Mois>1 || read.mid(3,5).toDouble()-Mois<-1){
                         //Them cac ham gui khi co sau khac nhieu
-                        sendMqttMois(mac,Mois);
+                        sendMqttData(mac,Mois,"Moisture");
                     } else {
                         console->insertPlainText("Stable luminance!!! \r\n");
                     }
@@ -2081,6 +2108,7 @@ void MainWindow::SendAIMois(int mac,int Mois) {
 
 //Sang lọc du lieu cho dust density
 void MainWindow::SendAIDD(int mac, double dus){
+    database.insertdata(mac,dus,"dust");
     QString smac;
     if(mac<10){
         smac.append(QString::number(mac));
@@ -2103,7 +2131,7 @@ void MainWindow::SendAIDD(int mac, double dus){
                     //qDebug()<<read.mid(9,6);
                     if (read.mid(3,5).toDouble()-dus>1 || read.mid(3,5).toDouble()-dus<-1){
                         //Them cac ham gui khi co sau khac nhieu
-                        sendMqttDust(mac,dus);
+                        sendMqttData(mac,dus,"dust");
                     } else {
                         console->insertPlainText("Stable luminance!!! \r\n");
                     }
@@ -2121,6 +2149,48 @@ void MainWindow::SendAIDD(int mac, double dus){
             testLabel->setText(line+"\n");
         }
         file.close();
+}
+
+bool MainWindow::CheckWifi()
+{
+    QNetworkAccessManager nam;
+    QNetworkRequest req(QUrl("http://www.google.com"));
+    QNetworkReply *reply = nam.get(req);
+    QEventLoop loop;
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+    if(reply->bytesAvailable()) {
+        return 1;
+    }
+    else {
+        return 0;
+        //DATA::wifi=0;
+        //QMessageBox::critical(this, “Info”, “You are not connected to the internet :(“);
+    }
+    //qDebug()<< DATA::wifi;
+}
+void MainWindow::onWifi()
+{
+    if(CheckWifi())
+    {
+        console->insertPlainText("connected Internet");
+        QString type;
+        QStringList list = database.getalldata("datasaved");
+        int i=0;
+        while (!list.value(i).isEmpty()) {
+            if(list.value(i+1).toInt()==1)
+            {
+                type = "temparature";
+            }
+            sendMqttDataSaved(list.value(i),list.value(i+1).toInt(),list.value(i+2).toDouble(),type);
+            i+=3;
+        }
+        database.deletealldata("datasaved");
+    }
+    else
+    {
+        console->insertPlainText("No Internet");
+    }
 }
 
 
