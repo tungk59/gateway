@@ -48,7 +48,37 @@ QStringList DbManager::getdata(int node, QString table)
     }
     return list;
 }
-
+QStringList DbManager::getalldata(QString table)
+{
+    QStringList list;
+    QSqlQuery query;
+    QString queryString = "SELECT * FROM "+table;
+    qDebug()<<queryString;
+    query.exec(queryString);
+    while (query.next()) {
+        QSqlRecord record = query.record();
+        QString time = record.value(0).toString();
+        list.append(time);
+        QString node = QString::number(record.value(1).toInt());
+        list.append(node);
+        QString Value = QString::number(record.value(2).toDouble());
+        list.append(Value);
+        qDebug() << "Time : "<<record.value(2).toDouble();
+    }
+    return list;
+}
+bool DbManager::deletealldata(QString table)
+{
+    bool success = false;
+    QSqlQuery query;
+    query.prepare("DELETE FROM "+table);
+    query.exec();
+    if(query.exec())
+       {
+           success = true;
+       }
+    return success;
+}
 bool DbManager::deletedata(int node, QString table)
 {
     bool success = false;

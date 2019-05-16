@@ -132,11 +132,12 @@ private slots:
     void sendMqtt();
     void mqttConnect();
     void connectEnabled();
-    void sendMqttTandH(int,double,double);
-    void sendMqttLux(int,double);
-    void sendMqttTandHLR(int,double,double);
-    void sendMqttDust(int,double);
-    void sendMqttMois(int,int);
+    //void sendMqttTandH(int,double,double);
+    //void sendMqttLux(int,double);
+    //void sendMqttTandHLR(int,double,double);
+    void sendMqttData(int,double,QString);
+    //void sendMqttMois(int,int);
+    void sendMqttDataSaved(QString,int,double,QString);
     //
     void sendImageToWeb(QString,QString);
     void sendBroadcast();
@@ -146,7 +147,8 @@ private slots:
     void SendAILUX(int, double);
     void SendAIMois(int,int);
     void SendAIDD(int , double );
-
+    bool CheckWifi();
+    void onWifi();
     void onLux_t(int, double);
     //Graph
     void makePlot();
